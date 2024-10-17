@@ -5,7 +5,7 @@ public class GameStage {
     }
     
     public static void main(String[] args) {
-        (new Stage()).movement();
+//        (new Stage()).movement();
     }
 }
 
