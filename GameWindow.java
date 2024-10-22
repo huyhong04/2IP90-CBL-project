@@ -8,8 +8,8 @@ public class GameWindow extends JFrame {
     private JFrame gameFrame;
     private CardLayout card;
     private JPanel cardPanel;
-    int SCREENHOR = 1080;
-    int SCREENVER = 720;
+    int SCREENSIZE_HOR = 1080;
+    int SCREENSIZE_VER = 720;
     String playerName;
 
     public GameWindow() {
@@ -17,7 +17,7 @@ public class GameWindow extends JFrame {
         cardPanel = new JPanel(card);
         gameFrame = new JFrame("Game Title");
         gameFrame.setResizable(false);
-        gameFrame.setSize(SCREENHOR, SCREENVER);
+        gameFrame.setSize(SCREENSIZE_HOR, SCREENSIZE_VER);
         gameFrame.setDefaultCloseOperation(gameFrame.EXIT_ON_CLOSE);
         gameFrame.setLocationRelativeTo(null);
 
@@ -26,20 +26,19 @@ public class GameWindow extends JFrame {
 
     public void homeScreen() {
         // Set layout of panel
-
         cardPanel.add(homePanel(), "Home Screen");
         cardPanel.add(newStagePanel(), "New Stage");
         cardPanel.add(levelSelectionPanel(), "Level Selection");
         cardPanel.add(leaderboardPanel(), "Leaderboard");
 
         card.show(cardPanel, "Home Screen");
-
         gameFrame.add(cardPanel);
         gameFrame.setVisible(true);
     }
 
     private JPanel homePanel() {
         JPanel homePanel = new JPanel();
+        JLabel introMessage = new JLabel("Welcome to the game 'Escapade'!");
         homePanel.setBackground(new Color(39, 49, 135));
         homePanel.setLayout(new BoxLayout(homePanel, BoxLayout.Y_AXIS));
 
@@ -72,6 +71,7 @@ public class GameWindow extends JFrame {
             }
         });
 
+        homePanel.add(introMessage);
         homePanel.add(Box.createHorizontalGlue());
         homePanel.add(startNewStage);
         homePanel.add(Box.createRigidArea(new Dimension(0, 40)));
