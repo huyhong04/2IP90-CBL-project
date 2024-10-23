@@ -1,10 +1,13 @@
 public class PlayerInteraction {
 
-    int movement() {
-        return 0;
+    private PlayerMovement player;
+
+    public PlayerInteraction(PlayerMovement player) {
+        this.player = player;
+    }
+
+    public boolean collidesWith(GameObject obj) {
+        return player.getPlayerX() == obj.getX() && player.getPlayerY() == obj.getY(); 
     }
     
-    public static void main(String[] args) {
-        (new PlayerInteraction()).movement();
-    }
 }

@@ -76,4 +76,21 @@ public class PlayerMovementTest {
         assertEquals(1, playerMovement.getPlayerX());
         assertEquals(0, playerMovement.getPlayerY());
     }
+
+    @Test
+    public void testSavePrevPosition() {
+        playerMovement.moveRight();
+        playerMovement.savePrevPosition();
+        
+        // Check that the player has moved to (1, 0)
+        assertEquals(1, playerMovement.getPlayerX());
+        assertEquals(0, playerMovement.getPlayerY());
+
+        // Move again to (1, 1)
+        playerMovement.moveDown();  // Moving to (1, 1)
+
+        // Ensure that the previous position saved was (1, 0)
+        assertEquals(1, playerMovement.previousX);  // Check that previous X was saved as 1
+        assertEquals(0, playerMovement.previousY);
+    }
 }
