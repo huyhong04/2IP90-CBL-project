@@ -14,24 +14,34 @@ import javax.swing.*;
  */
 public class GameWindow extends JFrame {
 
-    private JFrame gameFrame;
+    private JFrame gameFrame; // Frame for the game
+
     private CardLayout card; // Card layout for the game window
+
     private JPanel cardPanel; // Main panel
-    private Timer easyStageTime; // Timer object for the 'Easy' stage
-    private Timer mediumStageTime; // Timer object for the 'Medium' stage
-    private Timer hardStageTime; // Timer object for the 'Hard' stage
-    private JLabel timeLabel; // Label to display time taken to complete the stage
-    int elapsedTime; // Elapsed time in seconds
 
-    int screenSizeHorizontal = 1080; // Screen window dimensions (horizontal)
-    int screenSizeVertical = 720; // Screen window dimensions (vertical)
-    String playerName; // For name input
+    private Timer stageTime; // Timer object which represents a stopwatch during the stage
+
+    private JLabel easyTimeLabel; // Label to display time taken to complete the 'Easy' stage
+
+    private JLabel mediumTimeLabel; // Label to display time taken to complete the 'Easy' stage
+
+    private JLabel hardTimeLabel; // Label to display time taken to complete the 'Easy' stage
+
+    int elapsedTime; // Elapsed time in seconds (changing digit)
+
+    int screenSizeHorizontal = 1280; // Game window screen (horizontal dimension)
+
+    int screenSizeVertical = 720; // Game window screen (vertical dimension)
+
+    String playerName; // Player name input
 
 
-    /** Setting the game window, we use a card layout to allow navigation
-     *  between different panels.
+    /** We use a card layout to allow navigation between different panels
+     *  in the game window.
      */
     public GameWindow() {
+        // 
         card = new CardLayout();
         cardPanel = new JPanel(card); // Configure game panel with CardLayout
         gameFrame = new JFrame("Escapade"); // Set game title.
@@ -69,9 +79,8 @@ public class GameWindow extends JFrame {
     private JPanel homePanel() {
         // Set and customize panel for the home screen.
         JPanel homePanel = new JPanel();
-        BoxLayout homeLayout = new BoxLayout(homePanel, BoxLayout.Y_AXIS);
         homePanel.setBackground(new Color(39, 49, 135));
-        homePanel.setLayout(homeLayout);
+        homePanel.setLayout(new BoxLayout(homePanel, BoxLayout.Y_AXIS));
 
         // Set message labels for the home screen.
         JLabel introMessage = new JLabel("Welcome to the game 'Escapade'!", SwingConstants.CENTER);
@@ -88,9 +97,8 @@ public class GameWindow extends JFrame {
 
         // Set and customize buttons for the home screen.
         JPanel buttonPanel = new JPanel();
-        BoxLayout buttonLayout = new BoxLayout(buttonPanel, BoxLayout.X_AXIS);
         buttonPanel.setBackground(new Color(39, 49, 135));
-        buttonPanel.setLayout(buttonLayout);
+        buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
         buttonPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
         buttonPanel.setAlignmentY(Component.CENTER_ALIGNMENT);
 
@@ -114,22 +122,21 @@ public class GameWindow extends JFrame {
         homePanel.add(buttonPanel);
         homePanel.add(Box.createVerticalGlue());
 
-        // Implement listeners for each button
-        // Listener for the 'New Stage' button
+        // Listener for the 'New Stage' button.
         startNewStage.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 card.show(cardPanel, "New Stage");
             }
         });
-        // Listener for the 'Leaderboard' button
+        // Listener for the 'Leaderboard' button.
         playerLeaderboard.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 card.show(cardPanel, "Leaderboard");
             }
         });
-        // Listener for the 'Quit Game' button
+        // Listener for the 'Quit Game' button.
         quitGame.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -147,17 +154,19 @@ public class GameWindow extends JFrame {
     }
 
     /** Customizing the name input screen with button "Submit Player Name".
+     *  The name input screen contains a instruction message which says to input
+     *  at most 20 characters in your player name and the name must be of String type.
      * 
      *  @return newStagePanel (the name input panel which is a JPanel).
      */
     private JPanel newStagePanel() {
-        // Set and customize panel for the new stage screen
+        // Set and customize panel for the new stage screen.
         JPanel newStagePanel = new JPanel();
         BoxLayout newStageLayout = new BoxLayout(newStagePanel, BoxLayout.Y_AXIS);
         newStagePanel.setBackground(new Color(39, 76, 135));
         newStagePanel.setLayout(newStageLayout);
 
-        // Set a description for the name input
+        // Set a description for the name input.
         JLabel nameInputLabel = new JLabel(
             "What's your name? Enter it here as a String with maximum 20 characters (incl. spaces)."
             );
@@ -165,7 +174,7 @@ public class GameWindow extends JFrame {
         nameInputLabel.setFont(new Font("Monospaced", Font.BOLD, 20));
         nameInputLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        // Set and customize the input box for the player name
+        // Set and customize the input box for the player name.
         JTextField nameField = new JTextField();
         Dimension nameFieldSize = new Dimension(150, 30);
         nameField.setMaximumSize(nameFieldSize);
@@ -173,13 +182,13 @@ public class GameWindow extends JFrame {
         nameField.setAlignmentX(Component.CENTER_ALIGNMENT);
         nameField.setAlignmentY(Component.CENTER_ALIGNMENT);
 
-        // Set and customizing buttons
+        // Set and customizing buttons.
         JButton submitNameInput = new JButton("Submit Player Name");
         JButton backToHome = new JButton("Home Screen");
         submitNameInput.setAlignmentX(Component.CENTER_ALIGNMENT);
         backToHome.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        // Adding button panel to player name input screen
+        // Adding button panel to player name input screen.
         newStagePanel.add(nameInputLabel);
         newStagePanel.add(Box.createRigidArea(new Dimension(0, 40)));
         newStagePanel.add(nameField);
@@ -215,7 +224,7 @@ public class GameWindow extends JFrame {
             }
         });
 
-        // Adding listener to the button which redirects the player to the home screen.
+        // Listener for the button which redirects to the home screen.
         backToHome.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -226,6 +235,20 @@ public class GameWindow extends JFrame {
         return newStagePanel;
     }
 
+    /** Creates a label with the stage description.
+     * 
+     * @param desc The description.
+     * @return stageExplanation, label with a description that describes each stage.
+     */
+    private JLabel stageExplanation(String desc) {
+        JLabel stageExplanation = new JLabel(desc);
+        stageExplanation.setForeground(Color.WHITE);
+        stageExplanation.setFont(new Font("Dialog", Font.PLAIN, 16));
+        stageExplanation.setAlignmentX(Component.CENTER_ALIGNMENT);
+        
+        return stageExplanation;
+    }
+
     /** Customizing the stage selection screen with buttons "Easy", "Medium",
      *  and "Hard".
      * 
@@ -234,60 +257,37 @@ public class GameWindow extends JFrame {
     private JPanel stageSelectionPanel() {
         // Set and customize panel for the stage selection screen
         JPanel stageSelectionPanel = new JPanel();
-        BoxLayout stageSelectionLayout = new BoxLayout(stageSelectionPanel, BoxLayout.Y_AXIS);
         stageSelectionPanel.setBackground(new Color(39, 105, 135));
-        stageSelectionPanel.setLayout(stageSelectionLayout);
+        stageSelectionPanel.setLayout(new BoxLayout(stageSelectionPanel, BoxLayout.Y_AXIS));
 
-        // Set a description of each stage.
         // General description for the stage selection screen.
-        JLabel stageSelectionDesc = new JLabel(
+        JLabel stageSelectionDesc = stageExplanation(
             "Select a stage. Note the possible features in the stages below:"
-            );
-        stageSelectionDesc.setForeground(Color.WHITE);
+        );
         stageSelectionDesc.setFont(new Font("Monospaced", Font.BOLD, 20));
-        stageSelectionDesc.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        JLabel wallExplanation = new JLabel(
+        // Set a description for each of the possible components in the map.
+        JLabel wallExplanation = stageExplanation(
             "Walls: They stop you from moving in a certain direction and are immobile."
-            );
-        wallExplanation.setForeground(Color.WHITE);
-        wallExplanation.setFont(new Font("Dialog", Font.PLAIN, 16));
-        wallExplanation.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        JLabel obstacleExplanation = new JLabel(
+        );
+        JLabel obstacleExplanation = stageExplanation(
             "Obstacles: They kill you and are immobile."
         );
-        obstacleExplanation.setForeground(Color.WHITE);
-        obstacleExplanation.setFont(new Font("Dialog", Font.PLAIN, 16));
-        obstacleExplanation.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        JLabel monsterExplanation = new JLabel(
+        JLabel monsterExplanation = stageExplanation(
             "Monsters: They kill you and are mobile."
         );
-        monsterExplanation.setForeground(Color.WHITE);
-        monsterExplanation.setFont(new Font("Dialog", Font.PLAIN, 16));
-        monsterExplanation.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        JLabel easyStageDesc = new JLabel(
-            "'Easy': there are walls and obstacles and no monsters. Map is of size 20px x 20px."
+        JLabel easyStageDesc = stageExplanation(
+            "'Easy': There are walls and obstacles and no monsters. Map is of size 20px x 20px."
         );
-        easyStageDesc.setForeground(Color.WHITE);
         easyStageDesc.setFont(new Font("Dialog", Font.PLAIN, 14));
-        easyStageDesc.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        JLabel mediumStageDesc = new JLabel(
-            "'Medium': there are walls, obstacles and few monsters. Map is of size 40px x 40px."
+        JLabel mediumStageDesc = stageExplanation(
+            "'Medium': There are walls, obstacles and few monsters. Map is of size 40px x 40px."
         );
-        mediumStageDesc.setForeground(Color.WHITE);
         mediumStageDesc.setFont(new Font("Dialog", Font.PLAIN, 14));
-        mediumStageDesc.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        JLabel hardStageDesc = new JLabel(
-            "'Hard': there are walls, obstacles and many monsters. Map is of size 60px x 60px."
+        JLabel hardStageDesc = stageExplanation(
+            "'Hard': There are walls, obstacles and many monsters. Map is of size 60px x 60px."
         );
-        hardStageDesc.setForeground(Color.WHITE);
         hardStageDesc.setFont(new Font("Dialog", Font.PLAIN, 14));
-        hardStageDesc.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         // Set and customize buttons for the stage selection screen.
         JPanel buttonPanel = new JPanel();
@@ -309,31 +309,35 @@ public class GameWindow extends JFrame {
         buttonPanel.add(Box.createRigidArea(new Dimension(40, 0)));
         buttonPanel.add(Box.createHorizontalGlue());
 
-        // Add listeners for each buttton (for each stage)
+        // Listener for the 'Easy' stage.
         buttonEasyStage.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                startEasyStageTime();
+                // startEasyStageTime();
+                startStageTime();
                 card.show(cardPanel, "Easy");
             }
         });
-
+        // Listener for the 'Medium' stage.
         buttonMediumStage.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                startMediumStageTime();
+                // startMediumStageTime();
+                startStageTime();
                 card.show(cardPanel, "Medium");
             }
         });
-
+        // Listener for the 'Hard' stage.
         buttonHardStage.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                startHardStageTime();
+                // startHardStageTime();
+                startStageTime();
                 card.show(cardPanel, "Hard");
             }
         });
 
+        // Add all created components to the stage selection screen.
         stageSelectionPanel.add(stageSelectionDesc);
         stageSelectionPanel.add(wallExplanation);
         stageSelectionPanel.add(obstacleExplanation);
@@ -348,321 +352,238 @@ public class GameWindow extends JFrame {
         return stageSelectionPanel;
     }
 
+    /** Creates a button panel with the "Quit Stage", "Quit Game Session", and "Quit Game" buttons.
+     * 
+     * @return buttonPanel, a panel containing default buttons for each stage.
+     */
+    private JPanel stageButtonPanel() {
+        // Set and customize buttons for the easy stage.
+        JPanel buttonPanel = new JPanel();
+        FlowLayout buttonLayout = new FlowLayout(FlowLayout.LEFT, 10, 10);
+        buttonPanel.setLayout(buttonLayout);
+        buttonPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        buttonPanel.setAlignmentY(Component.BOTTOM_ALIGNMENT);
+
+        JButton quitStage = new JButton("Quit Stage");
+        JButton quitGameSession = new JButton("Quit Game Session");
+        JButton quitGame = new JButton("Quit Game");
+
+        // Adding buttons to the button panel.
+        buttonPanel.add(quitStage);
+        buttonPanel.add(quitGameSession);
+        buttonPanel.add(quitGame);
+
+        // Listener for the 'Quit Stage' button
+        quitStage.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                stopStageTime();
+                card.show(cardPanel, "Stage Selection");
+            }
+        });
+        // Listener for the 'Quit Game Session' button
+        quitGameSession.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                stopStageTime();
+                card.show(cardPanel, "Home Screen");
+            }
+        });
+        // Listener for the 'Quit Game' button
+        quitGame.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int quitResponse = JOptionPane.showConfirmDialog(GameWindow.this, 
+                    "Are you sure you want to quit the game?", 
+                    "Quit", 
+                    JOptionPane.YES_NO_OPTION);
+                if (quitResponse == JOptionPane.YES_OPTION) { // Quit if 'Yes' is chosen
+                    System.exit(0);
+                    stopStageTime();
+                }
+            }
+        });
+        return buttonPanel;
+    }
+
+    /** Formats a default description for each stage.
+     * 
+     * @param inStageDesc The in-stage description.
+     * @return stageDesc, formatting the in-stage description in the corresponding stage screen.
+     */
+    private JLabel inStageText(String inStageDesc) {
+        // Set the in-stage description.
+        JLabel stageDesc = new JLabel(inStageDesc);
+        stageDesc.setForeground(Color.WHITE);
+        stageDesc.setFont(new Font("Dialog", Font.PLAIN, 14));
+        stageDesc.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        return stageDesc;
+    }
+
+    /** Sets a default time label when entering a stage.
+     * 
+     * @return timeLabel, the elapsed time label which shows the duration of being in the stage.
+     */
+    private JLabel timeLabel() {
+        // Set stopwatch for the stage.
+        JLabel timeLabel = new JLabel(" Elapsed Time:  0s");
+        timeLabel.setForeground(Color.BLACK);
+        timeLabel.setFont(new Font("DialogInput", Font.BOLD, 14));
+        timeLabel.setAlignmentY(BOTTOM_ALIGNMENT);
+
+        return timeLabel;
+    }
+
+    /** Formatting and adding all prior components (via methods) into the 'Easy' stage screen.
+     * 
+     * @return easyStagePanel, the screen for the 'Easy' stage.
+     */
     private JPanel easyStage() {
-        // Set panel for the 'Easy' stage window
+        // Set panel for the 'Easy' stage window.
         JPanel easyStagePanel = new JPanel();
         BoxLayout easyStageLayout = new BoxLayout(easyStagePanel, BoxLayout.Y_AXIS);
         easyStagePanel.setBackground(new Color(105, 161, 96));
         easyStagePanel.setLayout(easyStageLayout);
 
-        // 'Easy' stage description
-        JLabel easyStageDesc = new JLabel(
-            "'Easy': there are walls and obstacles and no monsters. Map is of size 20px x 20px."
-        );
-        easyStageDesc.setForeground(Color.WHITE);
-        easyStageDesc.setFont(new Font("Dialog", Font.PLAIN, 14));
-        easyStageDesc.setAlignmentX(Component.LEFT_ALIGNMENT);
+        // Set the 'Easy' stage description.
+        JLabel easyStageDesc = inStageText(
+            " You are playing the 'Easy' stage. You can collect up to 100 points."
+            );
         
-        // Set stopwatch
-        timeLabel = new JLabel(" Elapsed Time:  0s ");
-        timeLabel.setForeground(Color.BLACK);
-        timeLabel.setFont(new Font("DialogInput", Font.BOLD, 14));
-        timeLabel.setAlignmentY(BOTTOM_ALIGNMENT);
+        // Set the stopwatch.
+        easyTimeLabel = timeLabel();
 
-        // Set and customize buttons for the easy stage.
-        JPanel buttonPanel = new JPanel();
-        FlowLayout buttonLayout = new FlowLayout(FlowLayout.LEFT, 10, 10);
-        buttonPanel.setBackground(new Color(105, 161, 96));
-        buttonPanel.setLayout(buttonLayout);
-        buttonPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        buttonPanel.setAlignmentY(Component.BOTTOM_ALIGNMENT);
-
-        JButton quitStage = new JButton("Quit Stage");
-        JButton quitGameSession = new JButton("Quit Game Session");
-        JButton quitGame = new JButton("Quit Game");
-
-        // Adding buttons to the button panel.
-        buttonPanel.add(quitStage);
-        buttonPanel.add(quitGameSession);
-        buttonPanel.add(quitGame);
-
-        // Adding all the implemented components of the home panel to the home screen.
+        // Adding all the implemented components to the 'Easy' stage screen.
+        JPanel easyStageButtonPanel = stageButtonPanel();
+        easyStageButtonPanel.setBackground(new Color(105, 161, 96));
         easyStagePanel.add(easyStageDesc);
-        easyStagePanel.add(buttonPanel);
-        easyStagePanel.add(timeLabel);
-
-        // Listener for the 'Quit Stage' button
-        quitStage.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                stopStageTime();
-                card.show(cardPanel, "Stage Selection");
-            }
-        });
-
-        // Listener for the 'Quit Game Session' button
-        quitGameSession.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                stopStageTime();
-                card.show(cardPanel, "Home Screen");
-            }
-        });
-
-        // Listener for the 'Quit Game' button
-        quitGame.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                int quitResponse = JOptionPane.showConfirmDialog(GameWindow.this, 
-                    "Are you sure you want to quit the game?", 
-                    "Quit", 
-                    JOptionPane.YES_NO_OPTION);
-                if (quitResponse == JOptionPane.YES_OPTION) { // Quit if 'Yes' is chosen
-                    System.exit(0);
-                    stopStageTime();
-                }
-            }
-        });
+        easyStagePanel.add(easyStageButtonPanel);
+        easyStagePanel.add(easyTimeLabel);
 
         return easyStagePanel;
     }
 
+    /** Formatting and adding all prior components (via methods) into the 'Medium' stage screen.
+     * 
+     * @return mediumStagePanel, the screen for the 'Medium' stage.
+     */
     private JPanel mediumStage() {
-        // Set panel for the 'Medium' stage window
+        // Set panel for the 'Medium' stage window.
         JPanel mediumStagePanel = new JPanel();
         BoxLayout mediumStageLayout = new BoxLayout(mediumStagePanel, BoxLayout.Y_AXIS);
         mediumStagePanel.setBackground(new Color(161, 147, 96));
         mediumStagePanel.setLayout(mediumStageLayout);
 
-        // 'Medium' stage description
-        JLabel mediumStageDesc = new JLabel(
-            "'Medium': there are walls, obstacles and few monsters. Map is of size 40px x 40px."
+        // Set the 'Medium' stage description.
+        JLabel mediumStageDesc = inStageText(
+            " You are playing the 'Medium' stage. You can collect up to 250 points."
         );
-        mediumStageDesc.setForeground(Color.WHITE);
-        mediumStageDesc.setFont(new Font("Dialog", Font.PLAIN, 14));
-        mediumStageDesc.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        // Set stopwatch
-        timeLabel = new JLabel(" Elapsed Time:  0s ");
-        timeLabel.setForeground(Color.BLACK);
-        timeLabel.setFont(new Font("DialogInput", Font.BOLD, 14));
-        timeLabel.setAlignmentY(BOTTOM_ALIGNMENT);
+        // Set stopwatch.
+        mediumTimeLabel = timeLabel();
 
-        // Set and customize buttons for the medium stage.
-        JPanel buttonPanel = new JPanel();
-        FlowLayout buttonLayout = new FlowLayout(FlowLayout.LEFT, 10, 10);
-        buttonPanel.setBackground(new Color(161, 147, 96));
-        buttonPanel.setLayout(buttonLayout);
-        buttonPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        buttonPanel.setAlignmentY(Component.BOTTOM_ALIGNMENT);
-
-        JButton quitStage = new JButton("Quit Stage");
-        JButton quitGameSession = new JButton("Quit Game Session");
-        JButton quitGame = new JButton("Quit Game");
-
-        // Adding buttons to the button panel.
-        buttonPanel.add(quitStage);
-        buttonPanel.add(quitGameSession);
-        buttonPanel.add(quitGame);
-
-        // Adding all the implemented components of the home panel to the home screen.
+        // Adding all the implemented components to the 'Medium' stage screen.
+        JPanel mediumStageButtonPanel = stageButtonPanel();
+        mediumStageButtonPanel.setBackground(new Color(161, 147, 96));
         mediumStagePanel.add(mediumStageDesc);
-        mediumStagePanel.add(buttonPanel);
-        mediumStagePanel.add(timeLabel);
+        mediumStagePanel.add(mediumStageButtonPanel);
+        mediumStagePanel.add(mediumTimeLabel);
 
-        // Listener for the 'Quit Stage' button
-        quitStage.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                stopStageTime();
-                card.show(cardPanel, "Stage Selection");
-            }
-        });
-
-        // Listener for the 'Quit Game Session' button
-        quitGameSession.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                stopStageTime();
-                card.show(cardPanel, "Home Screen");
-            }
-        });
-
-        // Listener for the 'Quit Game' button
-        quitGame.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                int quitResponse = JOptionPane.showConfirmDialog(GameWindow.this, 
-                    "Are you sure you want to quit the game?", 
-                    "Quit", 
-                    JOptionPane.YES_NO_OPTION);
-                if (quitResponse == JOptionPane.YES_OPTION) { // Quit if 'Yes' is chosen
-                    System.exit(0);
-                    stopStageTime();
-                }
-            }
-        });
-        
         return mediumStagePanel;
     }
 
+    /** Formatting and adding all prior components (via methods) into the 'Hard' stage screen.
+     * 
+     * @return hardStagePanel, the screen for the 'Hard' stage.
+     */
     private JPanel hardStage() {
-        // Set panel for the 'Hard' stage window
+        // Set the panel for the 'Hard' stage window.
         JPanel hardStagePanel = new JPanel();
         BoxLayout hardStageLayout = new BoxLayout(hardStagePanel, BoxLayout.Y_AXIS);
         hardStagePanel.setBackground(new Color(161, 96, 96));
         hardStagePanel.setLayout(hardStageLayout);
 
-        // 'Hard' stage description
-        JLabel hardStageDesc = new JLabel(
-            "'Hard': there are walls, obstacles and many monsters. Map is of size 60px x 60px."
+        // Set the 'Hard' stage description.
+        JLabel hardStageDesc = inStageText(
+            " You are playing the 'Hard' stage. You can collect up to 500 points."
         );
-        hardStageDesc.setForeground(Color.WHITE);
-        hardStageDesc.setFont(new Font("Dialog", Font.PLAIN, 14));
-        hardStageDesc.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        // Set stopwatch
-        timeLabel = new JLabel(" Elapsed Time:  0s ");
-        timeLabel.setForeground(Color.BLACK);
-        timeLabel.setFont(new Font("DialogInput", Font.BOLD, 14));
-        timeLabel.setAlignmentY(BOTTOM_ALIGNMENT);
+        // Set the stopwatch.
+        hardTimeLabel = timeLabel();
 
-        // Set and customize buttons for the medium stage.
-        JPanel buttonPanel = new JPanel();
-        FlowLayout buttonLayout = new FlowLayout(FlowLayout.LEFT, 10, 10);
-        buttonPanel.setBackground(new Color(161, 96, 96));
-        buttonPanel.setLayout(buttonLayout);
-        buttonPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        buttonPanel.setAlignmentY(Component.BOTTOM_ALIGNMENT);
-
-        JButton quitStage = new JButton("Quit Stage");
-        JButton quitGameSession = new JButton("Quit Game Session");
-        JButton quitGame = new JButton("Quit Game");
-
-        // Adding buttons to the button panel.
-        buttonPanel.add(quitStage);
-        buttonPanel.add(quitGameSession);
-        buttonPanel.add(quitGame);
-
-        // Adding all the implemented components of the home panel to the home screen.
+        // Adding all the implemented components to the 'Hard' stage screen.
+        JPanel hardStageButtonPanel = stageButtonPanel();
+        hardStageButtonPanel.setBackground(new Color(161, 96, 96));
         hardStagePanel.add(hardStageDesc);
-        hardStagePanel.add(buttonPanel);
-        hardStagePanel.add(timeLabel);
-
-        // Listener for the 'Quit Stage' button
-        quitStage.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                stopStageTime();
-                card.show(cardPanel, "Stage Selection");
-            }
-        });
-
-        // Listener for the 'Quit Game Session' button
-        quitGameSession.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                stopStageTime();
-                card.show(cardPanel, "Home Screen");
-            }
-        });
-
-        // Listener for the 'Quit Game' button
-        quitGame.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                int quitResponse = JOptionPane.showConfirmDialog(GameWindow.this, 
-                    "Are you sure you want to quit the game?", 
-                    "Quit", 
-                    JOptionPane.YES_NO_OPTION);
-                if (quitResponse == JOptionPane.YES_OPTION) { // Quit if 'Yes' is chosen
-                    System.exit(0);
-                    stopStageTime();
-                }
-            }
-        });
+        hardStagePanel.add(hardStageButtonPanel);
+        hardStagePanel.add(hardTimeLabel);
         
         return hardStagePanel;
     }
 
-    private void startEasyStageTime() {
-        if (easyStageTime != null && easyStageTime.isRunning()) {
-            easyStageTime.stop(); // Stop any previously run stopwatch
+    /** Starts the stopwatch when the listeners for the 'Easy', 'Medium', and 'Hard'
+     *  stage screens are activated (the corresponding respective buttons are clicked).
+     */
+    private void startStageTime() {
+        // Checks if there is already a stopwatch running.
+        if (stageTime != null && stageTime.isRunning()) {
+            stageTime.stop();
         }
 
-        elapsedTime = 0; // Reset stopwatch every time the stage screen is opened.
-        timeLabel.setText(" Elapsed Time:  0s ");
+        elapsedTime = 0; // Reset stopwatch every time a stage screen is opened.
+        easyTimeLabel.setText(" Elapsed Time:  0s");
+        mediumTimeLabel.setText(" Elapsed Time:  0s");
+        hardTimeLabel.setText(" Elapsed Time:  0s");
 
-        easyStageTime = new Timer(1000, new ActionListener() {
+        stageTime = new Timer(1000, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 elapsedTime++;
-                timeLabel.setText(" Elapsed Time:  " + elapsedTime + "s ");
+                easyTimeLabel.setText(" Elapsed Time:  " + elapsedTime + "s");
+                mediumTimeLabel.setText(" Elapsed Time:  " + elapsedTime + "s");
+                hardTimeLabel.setText(" Elapsed Time:  " + elapsedTime + "s");
             }
         });
 
-        easyStageTime.start();
+        stageTime.start();
     }
 
-    private void startMediumStageTime() {
-        if (mediumStageTime != null && mediumStageTime.isRunning()) {
-            mediumStageTime.stop(); // Stop any previously run stopwatch
-        }
-
-        elapsedTime = 0; // Reset stopwatch every time the stage screen is opened.
-        timeLabel.setText(" Elapsed Time:  0s ");
-
-        mediumStageTime = new Timer(1000, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                elapsedTime++;
-                timeLabel.setText(" Elapsed Time:  " + elapsedTime + "s ");
-            }
-        });
-
-        mediumStageTime.start();
-    }
-
-    private void startHardStageTime() {
-        if (hardStageTime != null && hardStageTime.isRunning()) {
-            hardStageTime.stop(); // Stop any previously run stopwatch
-        }
-
-        elapsedTime = 0; // Reset stopwatch every time the stage screen is opened.
-        timeLabel.setText(" Elapsed Time:  0s ");
-
-        hardStageTime = new Timer(1000, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                elapsedTime++;
-                timeLabel.setText(" Elapsed Time:  " + elapsedTime + "s ");
-            }
-        });
-
-        hardStageTime.start();
-    }
-
+    /** Stops the stopwatch when the listeners for the 'Quit Stage', 'Quit Game Session', 
+     *  and 'Quit Game' stage screens are activated 
+     *  (the corresponding respective buttons are clicked).
+     */
     private void stopStageTime() {
-        if (easyStageTime != null && easyStageTime.isRunning()) {
-            easyStageTime.stop();
-        }
-        if (mediumStageTime != null && mediumStageTime.isRunning()) {
-            mediumStageTime.stop();
-        }
-        if (hardStageTime != null && hardStageTime.isRunning()) {
-            hardStageTime.stop();
+        if (stageTime != null && stageTime.isRunning()) {
+            stageTime.stop();
         }
     }
 
+    /** Shows 10 stage plays with the highest scores, including the rank, player name, stage,
+     *  and the number of points collected.
+     * 
+     * @return leaderboardPanel, the leaderboard screen.
+     */
     private JPanel leaderboardPanel() {
+
         JPanel leaderboardPanel = new JPanel();
         BoxLayout leaderboardLayout = new BoxLayout(leaderboardPanel, BoxLayout.Y_AXIS);
         leaderboardPanel.setBackground(new Color(39, 92, 135));
         leaderboardPanel.setLayout(leaderboardLayout);
 
+        JLabel leaderboardText = new JLabel(
+            "Welcome to the leaderboard! The highest 10 scores are shown here."
+            );
+        leaderboardText.setForeground(Color.WHITE);
+        leaderboardText.setFont(new Font("Monospaced", Font.BOLD, 18));
+        leaderboardText.setAlignmentX(CENTER_ALIGNMENT);
+        leaderboardText.setAlignmentY(TOP_ALIGNMENT);
+
         JButton backToHome = new JButton("Home Screen");
         backToHome.setAlignmentX(Component.CENTER_ALIGNMENT);
+        backToHome.setAlignmentY(Component.CENTER_ALIGNMENT);
 
+        leaderboardPanel.add(leaderboardText);
         leaderboardPanel.add(backToHome);
 
         // Adding listener to the button which redirects the player to the home screen.
