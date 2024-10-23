@@ -3,10 +3,14 @@ import java.awt.event.*;
 public class PlayerMovement implements KeyListener {
     
     private int playerX, playerY;  // Position of the player.
+    private int previousX, previousY; // Previous valid position.
 
     public PlayerMovement(int startX, int startY) {
         this.playerX = startX;
         this.playerY = startY;
+        this.previousX = startX;
+        this.previousY = startY;
+
     }
 
     public int getPlayerX() {
@@ -17,6 +21,11 @@ public class PlayerMovement implements KeyListener {
     public int getPlayerY() {
         // Mainly used for testing.
         return playerY;
+    }
+
+    public void savePrevPosition() {
+        previousX = playerX;
+        previousY = playerY;
     }
 
     // Methods used to check the player movement (mainly for testing).
