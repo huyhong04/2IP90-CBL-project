@@ -23,8 +23,16 @@ public class PlayerMovement implements KeyListener {
         return playerY;
     }
 
+    public int getPreviousX() {
+        return previousX;
+    }
+
+    public int getPreviousY() {
+        return previousY;
+    }
+
     public void savePrevPosition() {
-        previousX = playerX;
+        previousX = playerX; 
         previousY = playerY;
     }
 
