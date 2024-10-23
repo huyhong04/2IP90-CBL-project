@@ -90,7 +90,7 @@ public class PlayerMovementTest {
         playerMovement.moveDown();
 
         // Ensure that the previous position saved was (1, 0)
-        assertEquals(1, playerMovement.getPreviousX);  // Check that previous X was saved.
-        assertEquals(0, playerMovement.getPreviousY); // Check that previous Y was saved.
+        assertEquals(1, playerMovement.getPreviousX());  // Check that previous X was saved.
+        assertEquals(0, playerMovement.getPreviousX()); // Check that previous Y was saved.
     }
 }
