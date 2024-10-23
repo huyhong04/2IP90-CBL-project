@@ -32,7 +32,7 @@ public class PlayerMovement implements KeyListener {
     }
 
     public void savePrevPosition() {
-        previousX = playerX;
+        previousX = playerX; 
         previousY = playerY;
     }
 
