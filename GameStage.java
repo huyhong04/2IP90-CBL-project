@@ -1,65 +1,92 @@
 import java.awt.*;
-import java.awt.event.*;
 import java.util.Random;
 import javax.swing.*;
 
-public class GameStage extends JPanel implements KeyListener {
+/**
+ * 
+ */
+public class GameStage extends JPanel {
 
-    private int rowSize;
-    private int colSize;
-    // private Player player;
-    // private Cell[][] stageMap;
-    private Point endPoint;
+    private int rowSize; // Number of rows in the stage map
+    private int colSize; // Number of columns in the stage map
+    private JLabel[][] stageMap; // A 2D array to represent the cells in the stage map
 
+    /** 
+     * 
+     * @param rowSize
+     * @param colSize
+     */
     public GameStage(int rowSize, int colSize) {
-        // stageMap = new Cell[rowSize][colSize];
+        this.rowSize = rowSize;
+        this.colSize = colSize;
+
+        setLayout(new GridLayout(rowSize, colSize)); // Set the layout for the stage map
+        stageMap = new JLabel[rowSize][colSize]; // Initializes the stage map
+
         initializeBoard();
-        addKeyListener(this);
-        setFocusable(true);
     }
 
+    /**
+     * 
+     */
     private void initializeBoard() {
         for (int r = 0; r < rowSize; r++) {
             for (int c = 0; c < colSize; c++) {
-                // stageMap[r][c] = new Cell(CellType.EMPTY);
+                JLabel cell = new JLabel();
+                cell.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+                cell.setOpaque(true);
+                cell.setBackground(new Color(153, 152, 156));
+                stageMap[r][c] = cell;
+                add(cell);
             }
         }
 
-        // player = new Player(0, 0);
-        // stageMap[0][0].setType(CellType.PLAYER);
-
-        // endPoint = new Point(rowSize, colSize);
-        // stageMap[endPoint.x][endPoint.y].setType(CellType.END);
-
-        addWalls();
-        addObstacles(50);
-        addMonsters();
+        gameElements();
     }
 
-    private void addWalls() {
-        
+    /**
+     * 
+     */
+    private void gameElements() {
+        int wallCount;
+        int obstacleCount;
+        int monsterCount;
+
+        wallCount = ((rowSize * colSize) / 4);
+        obstacleCount = ((rowSize * colSize) / 8);
+        monsterCount = ((rowSize * colSize) / 10);
+
+        stageMap[0][0].setBackground(Color.BLACK);
+        stageMap[rowSize - 1][colSize - 1].setBackground(new Color(68, 255, 0));
+
+        generateElements(wallCount, new Color(77, 58, 44));
+        generateElements(obstacleCount, Color.YELLOW);
+        generateElements(monsterCount, Color.RED);
     }
 
-    private void addObstacles(int obstacleCount) {
-        Random randomObstacles = new Random();
-        
-        obstacleCount = 10;
+    /**
+     * 
+     * @param elementCount
+     * @param elementColor
+     */
+    private void generateElements(int elementCount, Color elementColor) {
 
-        for (int i = 0; i < obstacleCount; i++) {
-            int r = randomObstacles.nextInt(rowSize);
-            int c = randomObstacles.nextInt(colSize);
-            // if (stageMap[r][c].getType() == CellType.EMPTY) {
-            //     board[x][y].setType(CellType.OBSTACLE);
+        int cellX;
+        int cellY;
+
+        Random random = new Random();
+
+        while (elementCount > 0) {
+            elementCount--;
+            cellX = random.nextInt(rowSize);
+            cellY = random.nextInt(colSize);
+
+            if ((cellX == 0 && cellY == 0) || (cellX == rowSize - 1 && cellY == colSize - 1)
+                || (!stageMap[cellX][cellY].getBackground().equals(new Color(153, 152, 156)))) {
+                continue;
             }
+
+            stageMap[cellX][cellY].setBackground(elementColor);
         }
-    }
-
-    private void addMonsters() {
-
-    }
-    
-    public static void main(String[] args) {
-//        (new Stage()).movement();
     }
 }
-
