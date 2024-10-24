@@ -449,7 +449,24 @@ public class GameWindow extends JFrame {
         // Set the 'Easy' stage description.
         JLabel easyStageDesc = inStageText(
             " You are playing the 'Easy' stage. You can collect up to 100 points."
-            );
+        );
+
+        // Set the descriptions for the game elements.
+        JLabel gameGoal = inStageText(
+            " You have to reach the goal as fast as possible, denoted by a green square in the map."
+        );
+        JLabel wallDesc = inStageText(
+            " Walls are denoted by brown squares."
+        );
+        JLabel obstacleDesc = inStageText(
+            " Obstacles are denoted by yellow squares."
+        );
+
+        // Set a good luck message.
+        JLabel goodLuckMessage = inStageText(
+            " Good luck!"
+        );
+        goodLuckMessage.setFont(new Font("Dialog", Font.PLAIN, 18));
         
         // Set the stopwatch.
         easyTimeLabel = timeLabel();
@@ -459,6 +476,10 @@ public class GameWindow extends JFrame {
         easyStageButtonPanel.setBackground(new Color(105, 161, 96));
         easyStagePanel.add(easyStageDesc);
         easyStagePanel.add(easyStageButtonPanel);
+        easyStagePanel.add(gameGoal);
+        easyStagePanel.add(wallDesc);
+        easyStagePanel.add(obstacleDesc);
+        easyStagePanel.add(goodLuckMessage);
         easyStagePanel.add(easyTimeLabel);
 
         return easyStagePanel;
@@ -477,8 +498,28 @@ public class GameWindow extends JFrame {
 
         // Set the 'Medium' stage description.
         JLabel mediumStageDesc = inStageText(
-            " You are playing the 'Medium' stage. You can collect up to 250 points."
+            " You are playing the 'Medium' stage. You can collect up to 400 points."
         );
+
+        // Set the descriptions for the game elements.
+        JLabel gameGoal = inStageText(
+            " You have to reach the goal as fast as possible, denoted by a green square in the map."
+        );
+        JLabel wallDesc = inStageText(
+            " Walls are denoted by brown squares."
+        );
+        JLabel obstacleDesc = inStageText(
+            " Obstacles are denoted by yellow squares."
+        );
+        JLabel monsterDesc = inStageText(
+            " Monsters are denoted by red squares."
+        );
+
+        // Set a good luck message.
+        JLabel goodLuckMessage = inStageText(
+            " Good luck!"
+        );
+        goodLuckMessage.setFont(new Font("Dialog", Font.PLAIN, 18));
 
         // Set stopwatch.
         mediumTimeLabel = timeLabel();
@@ -488,6 +529,11 @@ public class GameWindow extends JFrame {
         mediumStageButtonPanel.setBackground(new Color(161, 147, 96));
         mediumStagePanel.add(mediumStageDesc);
         mediumStagePanel.add(mediumStageButtonPanel);
+        mediumStagePanel.add(gameGoal);
+        mediumStagePanel.add(wallDesc);
+        mediumStagePanel.add(obstacleDesc);
+        mediumStagePanel.add(monsterDesc);
+        mediumStagePanel.add(goodLuckMessage);
         mediumStagePanel.add(mediumTimeLabel);
 
         return mediumStagePanel;
@@ -506,8 +552,28 @@ public class GameWindow extends JFrame {
 
         // Set the 'Hard' stage description.
         JLabel hardStageDesc = inStageText(
-            " You are playing the 'Hard' stage. You can collect up to 500 points."
+            " You are playing the 'Hard' stage. You can collect up to 900 points."
         );
+
+        // Set the descriptions for the game elements.
+        JLabel gameGoal = inStageText(
+            " You have to reach the goal as fast as possible, denoted by a green square in the map."
+        );
+        JLabel wallDesc = inStageText(
+            " Walls are denoted by brown squares."
+        );
+        JLabel obstacleDesc = inStageText(
+            " Obstacles are denoted by yellow squares."
+        );
+        JLabel monsterDesc = inStageText(
+            " Monsters are denoted by red squares."
+        );
+
+        // Set a good luck message.
+        JLabel goodLuckMessage = inStageText(
+            " Good luck!"
+        );
+        goodLuckMessage.setFont(new Font("Dialog", Font.PLAIN, 18));        
 
         // Set the stopwatch.
         hardTimeLabel = timeLabel();
@@ -517,6 +583,11 @@ public class GameWindow extends JFrame {
         hardStageButtonPanel.setBackground(new Color(161, 96, 96));
         hardStagePanel.add(hardStageDesc);
         hardStagePanel.add(hardStageButtonPanel);
+        hardStagePanel.add(gameGoal);
+        hardStagePanel.add(wallDesc);
+        hardStagePanel.add(obstacleDesc);
+        hardStagePanel.add(monsterDesc);
+        hardStagePanel.add(goodLuckMessage);
         hardStagePanel.add(hardTimeLabel);
         
         return hardStagePanel;
