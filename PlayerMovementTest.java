@@ -94,4 +94,21 @@ public class PlayerMovementTest {
         assertEquals(1, playerMovement.getPreviousX());
         assertEquals(0, playerMovement.getPreviousY());
     }
+
+    @Test
+    public void testStayStill() {
+        // Move the player to a new position
+        playerMovement.moveRight();  // Player moves to (1, 0)
+        playerMovement.savePrevPosition();  // Save the current position
+
+        // Move again to (1, 1)
+        playerMovement.moveDown();  // Player moves to (1, 1)
+
+        // Call stayStill to revert to the previous position (1, 0)
+        playerMovement.stayStill();
+
+        // Verify that the player has reverted to the previous position (1, 0)
+        assertEquals(1, playerMovement.getPlayerX());
+        assertEquals(0, playerMovement.getPlayerY());
+    }
 }
