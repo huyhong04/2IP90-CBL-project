@@ -111,4 +111,17 @@ public class PlayerMovementTest {
         assertEquals(1, playerMovement.getPlayerX());
         assertEquals(0, playerMovement.getPlayerY());
     }
+
+    @Test
+    public void testIsDeadInitially() {
+        // Player is initialized as alive, so isDead() should return false
+        assertFalse(playerMovement.isDead());
+    }
+
+    @Test
+    public void testDie() {
+        playerMovement.die();
+
+        assertTrue(playerMovement.isDead());
+    }
 }
