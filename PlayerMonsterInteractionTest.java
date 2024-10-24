@@ -13,7 +13,6 @@ public class PlayerMonsterInteractionTest {
         player = new PlayerMovement(0, 0);
     }
     
-    // Test 1: Player cannot move through walls.
     @Test
     public void testWallCollision() {
         Wall wall = new Wall(0, 1);
@@ -28,7 +27,6 @@ public class PlayerMonsterInteractionTest {
         assertEquals(0, player.getPlayerY());
     }
 
-    // Test 2: Player die upon monster collision.
     @Test
     public void testMonsterCollision() {
         // Monster at player's position.
@@ -46,8 +44,7 @@ public class PlayerMonsterInteractionTest {
         assertEquals(0, player.getPlayerX());
         assertEquals(0, player.getPlayerY());
     }
-
-    // Test 3: Player die upon interaction with obstacles (not walls).
+    
     @Test
     public void testObstacleCollision() {
         Obstacle obstacle = new Obstacle(0, 0);

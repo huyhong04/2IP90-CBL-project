@@ -124,4 +124,16 @@ public class PlayerMovementTest {
 
         assertTrue(playerMovement.isDead());
     }
+
+    @Test
+    public void testMultipleDie() {
+        // Test to ensure isDead() stay true when die() is called multiple times.
+        playerMovement.die();
+
+        assertTrue(playerMovement.isDead());
+
+        playerMovement.die();
+
+        assertTrue(playerMovement.isDead());
+    }
 }
