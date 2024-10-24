@@ -4,12 +4,14 @@ public class PlayerMovement implements KeyListener {
     
     private int playerX, playerY;  // Position of the player.
     private int previousX, previousY; // Previous valid position.
+    private boolean dead;
 
     public PlayerMovement(int startX, int startY) {
         this.playerX = startX;
         this.playerY = startY;
         this.previousX = startX;
         this.previousY = startY;
+        this.dead = false; // Player starts alive.
 
     }
 
@@ -40,6 +42,14 @@ public class PlayerMovement implements KeyListener {
     public void stayStill() {
         playerX = previousX;
         playerY = previousY;
+    }
+
+    public void die() {
+        dead = true;
+    }
+
+    public boolean isDead() {
+        return dead;
     }
 
     // Methods used to check the player movement (mainly for testing).
