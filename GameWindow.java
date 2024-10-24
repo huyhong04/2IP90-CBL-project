@@ -524,11 +524,17 @@ public class GameWindow extends JFrame {
         // Set stopwatch.
         mediumTimeLabel = timeLabel();
 
+        // Adding stage map
+        GameStage mediumStageMap = new GameStage(20, 20);
+        mediumStageMap.setAlignmentX(Component.CENTER_ALIGNMENT);
+        mediumStageMap.setAlignmentY(Component.CENTER_ALIGNMENT);
+
         // Adding all the implemented components to the 'Medium' stage screen.
         JPanel mediumStageButtonPanel = stageButtonPanel();
         mediumStageButtonPanel.setBackground(new Color(161, 147, 96));
         mediumStagePanel.add(mediumStageDesc);
         mediumStagePanel.add(mediumStageButtonPanel);
+        mediumStagePanel.add(mediumStageMap);
         mediumStagePanel.add(gameGoal);
         mediumStagePanel.add(wallDesc);
         mediumStagePanel.add(obstacleDesc);
