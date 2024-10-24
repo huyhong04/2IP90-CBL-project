@@ -21,6 +21,7 @@ public class GameStage extends JPanel {
         this.colSize = colSize;
 
         setLayout(new GridLayout(rowSize, colSize)); // Set the layout for the stage map
+        setPreferredSize(new Dimension(400, 400));
         stageMap = new JLabel[rowSize][colSize]; // Initializes the stage map
 
         initializeBoard();
@@ -33,7 +34,7 @@ public class GameStage extends JPanel {
         for (int r = 0; r < rowSize; r++) {
             for (int c = 0; c < colSize; c++) {
                 JLabel cell = new JLabel();
-                cell.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+                cell.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
                 cell.setOpaque(true);
                 cell.setBackground(new Color(153, 152, 156));
                 stageMap[r][c] = cell;
