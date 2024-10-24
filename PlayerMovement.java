@@ -36,6 +36,12 @@ public class PlayerMovement implements KeyListener {
         previousY = playerY;
     }
 
+    // Revert to the previous position (stay still)
+    public void stayStill() {
+        playerX = previousX;
+        playerY = previousY;
+    }
+
     // Methods used to check the player movement (mainly for testing).
     public void moveUp() {
         playerY -= 1;
