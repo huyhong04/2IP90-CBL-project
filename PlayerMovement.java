@@ -5,14 +5,15 @@ public class PlayerMovement implements KeyListener {
     private int playerX, playerY;  // Position of the player.
     private int previousX, previousY; // Previous valid position.
     private boolean dead;
+    private GameStage gameStage;
 
-    public PlayerMovement(int startX, int startY) {
+    public PlayerMovement(int startX, int startY, GameStage gameStage) {
         this.playerX = startX;
         this.playerY = startY;
         this.previousX = startX;
         this.previousY = startY;
         this.dead = false; // Player starts alive.
-
+        this.gameStage = gameStage;
     }
 
     public int getPlayerX() {
@@ -61,24 +62,45 @@ public class PlayerMovement implements KeyListener {
 
     // Methods used to check the player movement (mainly for testing).
     public void moveUp() {
-        playerY -= 1;
+        if (playerY > 0) {
+            savePrevPosition();
+            playerY -= 1;
+            gameStage.updatePlayerPosition();
+        }
+        System.out.println("Up");
     }
 
     public void moveDown() {
-        playerY += 1;
+        if (playerY < gameStage.getColSize() - 1) {
+            savePrevPosition();
+            playerY += 1;
+            gameStage.updatePlayerPosition();
+        }
+        System.out.println("Down");
     }
 
     public void moveLeft() {
-        playerX -= 1;
+        if (playerX > 0) {
+            savePrevPosition();
+            playerX -= 1;
+            gameStage.updatePlayerPosition();
+        }
+        System.out.println("Left");
     }
 
     public void moveRight() {
-        playerX += 1;
+        if (playerX < gameStage.getRowSize() - 1) {
+            savePrevPosition();
+            playerX += 1;
+            gameStage.updatePlayerPosition();
+        }
+        System.out.println("Right");
     }
 
     @Override
     public void keyPressed(KeyEvent e) {
         int key = e.getKeyCode();
+        System.out.println("Key pressed: " + KeyEvent.getKeyText(key));
 
         // The key will move the player based on 'WASD' or arrow keys.
         if (key == KeyEvent.VK_W || key == KeyEvent.VK_UP) {
@@ -90,6 +112,7 @@ public class PlayerMovement implements KeyListener {
         } else if (key == KeyEvent.VK_D || key == KeyEvent.VK_RIGHT) {
             moveRight();
         }
+        gameStage.updatePlayerPosition();
     }
 
     @Override
