@@ -25,20 +25,54 @@ public class GameStage extends JPanel {
 
     private JLabel[][] stageMap; // A 2D array to represent the cells in the stage map
 
+    private PlayerMovement player;
+
     /** Create a layout for the stage map.
      * 
      * @param rowSize The number of rows in the stage map.
      * @param colSize The number of columns in the stage map.
      */
     public GameStage(int rowSize, int colSize) {
+        super(new GridLayout(rowSize, colSize));
         this.rowSize = rowSize;
         this.colSize = colSize;
-
-        setLayout(new GridLayout(rowSize, colSize)); // Set the layout for the stage map
-        setPreferredSize(new Dimension(400, 400));
-        stageMap = new JLabel[rowSize][colSize]; // Initializes the stage map
+        this.stageMap = new JLabel[rowSize][colSize]; // Initializes the stage map
 
         initializeStage();
+
+        // Initialize the player at the start of the stage map
+        player = new PlayerMovement(0, 0, this);
+        addKeyListener(player);
+        System.out.println("KeyListener added to GameStage");
+        setFocusable(true);
+        requestFocusInWindow();
+        updatePlayerPosition();
+        setPreferredSize(new Dimension(400, 400));
+    }
+
+    @Override
+    public boolean isFocusable() {
+        return true;
+    }
+
+    public void updatePlayerPosition() {
+        if (stageMap[player.getPreviousX()][player.getPreviousY()] != null) {
+            stageMap[player.getPreviousX()][player.getPreviousY()].setBackground(new Color(153, 152, 156));
+        }
+
+        if (stageMap[player.getPlayerX()][player.getPlayerY()] != null) {
+            stageMap[player.getPlayerX()][player.getPlayerY()].setBackground(Color.BLUE);
+        }
+
+        repaint();
+    }
+
+    public int getRowSize() {
+        return rowSize;
+    }
+
+    public int getColSize() {
+        return colSize;
     }
 
     /** Initializes the formatting and coloring of the stage map.
@@ -92,18 +126,6 @@ public class GameStage extends JPanel {
         } // Repeat if there is no such path.
     }
 
-    // /** Clears all elements from the stage map, except for the player and goal.
-    //  */
-    // private void clearStageMap() {
-    //     for (int row = 0; row < rowSize; row++) {
-    //         for (int col = 0; col < colSize; col++) {
-    //             if (!(row == 0 && col == 0) && !(row == rowSize - 1 && col == colSize - 1)) {
-    //                 stageMap[row][col].setBackground(Color.WHITE); // Reset cell.
-    //             }
-    //         }
-    //     }
-    // }
-
     /** Generate elements randomly onto the stage map.
      * 
      * @param elementCount The number of game elements.
@@ -153,7 +175,7 @@ public class GameStage extends JPanel {
         int[] rowDirection = {-1, 1, 0, 0};
         int[] colDirection = {0, 0, -1, 1};
 
-        while (cellQueue.isEmpty()) {
+        while (!cellQueue.isEmpty()) {
             Point currentCell = cellQueue.poll(); // Takes the current cell in the queue.
             int currentRow = currentCell.x;
             int currentCol = currentCell.y;
@@ -171,7 +193,7 @@ public class GameStage extends JPanel {
                 // Checks if this path is within bounds and if there are any unvisited cells.
                 if (stageMapBounds(newRow, newCol) 
                     && !visitedCells[newRow][newCol]
-                    && stageMap[newRow][newCol].getBackground().equals(Color.WHITE)) {
+                    && stageMap[newRow][newCol].getBackground().equals(new Color(153, 152, 156))) {
                     
                     cellQueue.add(new Point(newRow, newCol));
                     visitedCells[newRow][newCol] = true;
