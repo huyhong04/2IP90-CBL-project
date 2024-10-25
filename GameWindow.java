@@ -36,6 +36,8 @@ public class GameWindow extends JFrame {
 
     String playerName; // Player name input
 
+    PlayerMovement player; // Player
+
 
     /** We use a card layout to allow navigation between different panels
      *  in the game window.
@@ -439,13 +441,12 @@ public class GameWindow extends JFrame {
     private JPanel easyStage() {
         // Set panel for the 'Easy' stage window.
         JPanel easyStagePanel = new JPanel();
-        BoxLayout easyStageLayout = new BoxLayout(easyStagePanel, BoxLayout.Y_AXIS);
         easyStagePanel.setBackground(new Color(105, 161, 96));
-        easyStagePanel.setLayout(easyStageLayout);
+        easyStagePanel.setLayout(new BoxLayout(easyStagePanel, BoxLayout.Y_AXIS));
 
         // Set the 'Easy' stage description.
         JLabel easyStageDesc = inStageText(
-            " You are playing the 'Easy' stage. You can collect up to 100 points."
+            " You are playing the 'Easy' stage, where the player is denoted by a blue square."
         );
 
         // Set the descriptions for the game elements.
@@ -507,13 +508,12 @@ public class GameWindow extends JFrame {
     private JPanel mediumStage() {
         // Set panel for the 'Medium' stage window.
         JPanel mediumStagePanel = new JPanel();
-        BoxLayout mediumStageLayout = new BoxLayout(mediumStagePanel, BoxLayout.Y_AXIS);
         mediumStagePanel.setBackground(new Color(161, 147, 96));
-        mediumStagePanel.setLayout(mediumStageLayout);
+        mediumStagePanel.setLayout(new BoxLayout(mediumStagePanel, BoxLayout.Y_AXIS));
 
         // Set the 'Medium' stage description.
         JLabel mediumStageDesc = inStageText(
-            " You are playing the 'Medium' stage. You can collect up to 400 points."
+            " You are playing the 'Medium' stage, where the player is denoted by a blue square."
         );
 
         // Set the descriptions for the game elements.
@@ -543,9 +543,6 @@ public class GameWindow extends JFrame {
         GameStage mediumStageMap = new GameStage(20, 20);
         mediumStageMap.setAlignmentX(Component.CENTER_ALIGNMENT);
         mediumStageMap.setAlignmentY(Component.CENTER_ALIGNMENT);
-        mediumStageMap.setFocusable(true);
-        // mediumStageMap.requestFocusInWindow();
-        mediumStageMap.repaint();
 
         // Adding a default button panel
         JPanel mediumStageButtonPanel = stageButtonPanel();
@@ -570,7 +567,9 @@ public class GameWindow extends JFrame {
         // Adding all the implemented components to the 'Medium' stage screen.
         mediumStagePanel.add(labelPanel1);
         mediumStagePanel.add(mediumStageMap);
+        // gameFrame.add(mediumStageMap); // this is needed for KeyListener to work
         mediumStagePanel.add(labelPanel2);
+        
         SwingUtilities.invokeLater(() -> mediumStageMap.requestFocusInWindow());
 
         return mediumStagePanel;
@@ -583,13 +582,12 @@ public class GameWindow extends JFrame {
     private JPanel hardStage() {
         // Set the panel for the 'Hard' stage window.
         JPanel hardStagePanel = new JPanel();
-        BoxLayout hardStageLayout = new BoxLayout(hardStagePanel, BoxLayout.Y_AXIS);
         hardStagePanel.setBackground(new Color(161, 96, 96));
-        hardStagePanel.setLayout(hardStageLayout);
+        hardStagePanel.setLayout(new BoxLayout(hardStagePanel, BoxLayout.Y_AXIS));
 
         // Set the 'Hard' stage description.
         JLabel hardStageDesc = inStageText(
-            " You are playing the 'Hard' stage. You can collect up to 900 points."
+            " You are playing the 'Hard' stage, where the player is denoted by a blue square."
         );
 
         // Set the descriptions for the game elements.
@@ -685,8 +683,7 @@ public class GameWindow extends JFrame {
         }
     }
 
-    /** Shows 10 stage plays with the highest scores, including the rank, player name, stage,
-     *  and the number of points collected.
+    /** Shows 10 stage plays with the highest scores, including the rank, player name, and stage.
      * 
      * @return leaderboardPanel, the leaderboard screen.
      */
