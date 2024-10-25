@@ -1,6 +1,6 @@
 import java.awt.*;
-import java.util.LinkedList; // For BFS algorithm
-import java.util.Queue; // For BFS algorithm
+// import java.util.LinkedList; // For BFS algorithm
+// import java.util.Queue; // For BFS algorithm
 import java.util.Random;
 import javax.swing.*;
 
@@ -25,7 +25,7 @@ public class GameStage extends JPanel {
 
     private JLabel[][] stageMap; // A 2D array to represent the cells in the stage map
 
-    private PlayerMovement player;
+    PlayerMovement player;
 
     /** Create a layout for the stage map.
      * 
@@ -42,10 +42,10 @@ public class GameStage extends JPanel {
 
         // Initialize the player at the start of the stage map
         player = new PlayerMovement(0, 0, this);
-        addKeyListener(player);
+        this.addKeyListener(player);
+        this.setFocusable(true);
+        this.requestFocusInWindow();
         System.out.println("KeyListener added to GameStage");
-        setFocusable(true);
-        requestFocusInWindow();
         updatePlayerPosition();
         setPreferredSize(new Dimension(400, 400));
     }
@@ -101,29 +101,28 @@ public class GameStage extends JPanel {
         int wallCount; // Number of walls randomly spawned in the stage map.
         int obstacleCount; // Number of obstacles randomly spawned in the stage map.
         int monsterCount; // Number of monsters randomly spawned in the stage map.
-        boolean validPath = true; // There is a path from the player to the goal.
+        // boolean validPath = true; // There is a path from the player to the goal.
 
-        while (validPath) {
-            // Distribute the number of spawned game elements with the given number of
-            // rows and columns in the stage map.
-            wallCount = ((rowSize * colSize) / 10);
-            obstacleCount = ((rowSize * colSize) / 12);
-            monsterCount = ((rowSize * colSize) / 15);
+        // while (validPath) {
+        // Distribute the number of spawned game elements with the given number of
+        // rows and columns in the stage map.
+        wallCount = ((rowSize * colSize) / 10);
+        obstacleCount = ((rowSize * colSize) / 12);
+        monsterCount = ((rowSize * colSize) / 15);
 
-            // Set the spawn position of the player and the goal.
-            // Note that these spawn positions aren't random.
-            stageMap[0][0].setBackground(Color.BLUE); // Set the player color as blue
-            // Set the goal color as green
-            stageMap[rowSize - 1][colSize - 1].setBackground(new Color(68, 255, 0)); 
+        // Set the spawn position of the player and the goal.
+        // Note that these spawn positions aren't random.
+        stageMap[0][0].setBackground(Color.BLUE); // Set the player color as blue
+        // Set the goal color as green
+        stageMap[rowSize - 1][colSize - 1].setBackground(new Color(68, 255, 0)); 
 
-            // Generate game elements with the corresponding chosen colors.
-            generateElements(wallCount, new Color(77, 58, 44));
-            generateElements(obstacleCount, Color.YELLOW);
-            generateElements(monsterCount, Color.RED);
+        // Generate game elements with the corresponding chosen colors.
+        generateElements(wallCount, new Color(77, 58, 44));
+        generateElements(obstacleCount, Color.YELLOW);
+        generateElements(monsterCount, Color.RED);
 
-            // Checks for an available path from the player to the goal.
-            validPath = findPath();
-        } // Repeat if there is no such path.
+        // Checks for an available path from the player to the goal.
+        // validPath = findPath();
     }
 
     /** Generate elements randomly onto the stage map.
@@ -158,51 +157,51 @@ public class GameStage extends JPanel {
         }
     }
 
-    /** Implement a BFS algorithm to determine if there is a path
-     *  from the player to the goal.
-     * 
-     * @return true if there is this path, false if otherwise.
-     */
-    private boolean findPath() {
+    // /** Implement a BFS algorithm to determine if there is a path
+    //  *  from the player to the goal.
+    //  * 
+    //  * @return true if there is this path, false if otherwise.
+    //  */
+    // private boolean findPath() {
 
-        // Initialize an array with visited cells.
-        boolean[][] visitedCells = new boolean[rowSize][colSize];
-        Queue<Point> cellQueue = new LinkedList<>();
-        cellQueue.add(new Point(0, 0));
-        visitedCells[0][0] = true; // Where the player is spawned.
+    //     // Initialize an array with visited cells.
+    //     boolean[][] visitedCells = new boolean[rowSize][colSize];
+    //     Queue<Point> cellQueue = new LinkedList<>();
+    //     cellQueue.add(new Point(0, 0));
+    //     visitedCells[0][0] = true; // Where the player is spawned.
 
-        // Directions for moving the player.
-        int[] rowDirection = {-1, 1, 0, 0};
-        int[] colDirection = {0, 0, -1, 1};
+    //     // Directions for moving the player.
+    //     int[] rowDirection = {-1, 1, 0, 0};
+    //     int[] colDirection = {0, 0, -1, 1};
 
-        while (!cellQueue.isEmpty()) {
-            Point currentCell = cellQueue.poll(); // Takes the current cell in the queue.
-            int currentRow = currentCell.x;
-            int currentCol = currentCell.y;
+    //     while (!cellQueue.isEmpty()) {
+    //         Point currentCell = cellQueue.poll(); // Takes the current cell in the queue.
+    //         int currentRow = currentCell.x;
+    //         int currentCol = currentCell.y;
 
-            // Checks if the player has reached the goal in this path-finding search.
-            if (currentRow == rowSize - 1 && currentCol == colSize - 1) {
-                return true;
-            }
+    //         // Checks if the player has reached the goal in this path-finding search.
+    //         if (currentRow == rowSize - 1 && currentCol == colSize - 1) {
+    //             return true;
+    //         }
 
-            // Check for neighbor cells
-            for (int i = 0; i < 4; i++) {
-                int newRow = currentRow + rowDirection[i];
-                int newCol = currentCol + colDirection[i];
+    //         // Check for neighbor cells
+    //         for (int i = 0; i < 4; i++) {
+    //             int newRow = currentRow + rowDirection[i];
+    //             int newCol = currentCol + colDirection[i];
 
-                // Checks if this path is within bounds and if there are any unvisited cells.
-                if (stageMapBounds(newRow, newCol) 
-                    && !visitedCells[newRow][newCol]
-                    && stageMap[newRow][newCol].getBackground().equals(new Color(153, 152, 156))) {
+    //             // Checks if this path is within bounds and if there are any unvisited cells.
+    //             if (stageMapBounds(newRow, newCol) 
+    //                 && !visitedCells[newRow][newCol]
+    //                 && stageMap[newRow][newCol].getBackground().equals(new Color(153, 152, 156))) {
                     
-                    cellQueue.add(new Point(newRow, newCol));
-                    visitedCells[newRow][newCol] = true;
-                }
-            }
-        }
+    //                 cellQueue.add(new Point(newRow, newCol));
+    //                 visitedCells[newRow][newCol] = true;
+    //             }
+    //         }
+    //     }
 
-        return false; // There is no path from the player to the goal.
-    }
+    //     return false; // There is no path from the player to the goal.
+    // }
 
     /** Checks if the path-finding algorithm stays within bounds of the stage map.
      * 
