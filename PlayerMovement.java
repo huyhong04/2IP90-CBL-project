@@ -3,10 +3,16 @@ import java.awt.event.*;
 public class PlayerMovement implements KeyListener {
     
     private int playerX, playerY;  // Position of the player.
+    private int previousX, previousY; // Previous valid position.
+    private boolean dead;
 
     public PlayerMovement(int startX, int startY) {
         this.playerX = startX;
         this.playerY = startY;
+        this.previousX = startX;
+        this.previousY = startY;
+        this.dead = false; // Player starts alive.
+
     }
 
     public int getPlayerX() {
@@ -17,6 +23,40 @@ public class PlayerMovement implements KeyListener {
     public int getPlayerY() {
         // Mainly used for testing.
         return playerY;
+    }
+
+    public int getPreviousX() {
+        return previousX;
+    }
+
+    public int getPreviousY() {
+        return previousY;
+    }
+
+    public void savePrevPosition() {
+        previousX = playerX; 
+        previousY = playerY;
+    }
+
+    // Revert to the previous position (stay still)
+    public void stayStill() {
+        playerX = previousX;
+        playerY = previousY;
+    }
+
+    public void die() {
+        dead = true;
+    }
+
+    public boolean isDead() {
+        return dead;
+    }
+
+    public void respawn(int newX, int newY) {
+        playerX = newX;
+        playerY = newY;
+        dead = false; 
+
     }
 
     // Methods used to check the player movement (mainly for testing).
