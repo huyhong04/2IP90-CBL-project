@@ -313,7 +313,6 @@ public class GameWindow extends JFrame {
         buttonEasyStage.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // startEasyStageTime();
                 startStageTime();
                 card.show(cardPanel, "Easy");
             }
@@ -322,7 +321,6 @@ public class GameWindow extends JFrame {
         buttonMediumStage.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // startMediumStageTime();
                 startStageTime();
                 card.show(cardPanel, "Medium");
             }
@@ -331,7 +329,6 @@ public class GameWindow extends JFrame {
         buttonHardStage.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // startHardStageTime();
                 startStageTime();
                 card.show(cardPanel, "Hard");
             }
@@ -471,16 +468,34 @@ public class GameWindow extends JFrame {
         // Set the stopwatch.
         easyTimeLabel = timeLabel();
 
-        // Adding all the implemented components to the 'Easy' stage screen.
+        // Adding stage map
+        GameStage easyStageMap = new GameStage(10, 10);
+        easyStageMap.setAlignmentX(Component.CENTER_ALIGNMENT);
+        easyStageMap.setAlignmentY(Component.CENTER_ALIGNMENT);
+
+        // Adding a default button panel
         JPanel easyStageButtonPanel = stageButtonPanel();
         easyStageButtonPanel.setBackground(new Color(105, 161, 96));
-        easyStagePanel.add(easyStageDesc);
-        easyStagePanel.add(easyStageButtonPanel);
-        easyStagePanel.add(gameGoal);
-        easyStagePanel.add(wallDesc);
-        easyStagePanel.add(obstacleDesc);
-        easyStagePanel.add(goodLuckMessage);
-        easyStagePanel.add(easyTimeLabel);
+
+        // Alignment of text labels
+        JPanel labelPanel1 = new JPanel();
+        labelPanel1.setLayout(new FlowLayout(FlowLayout.LEFT));
+        labelPanel1.setBackground(new Color(105, 161, 96));
+        JPanel labelPanel2 = new JPanel();
+        labelPanel2.setLayout(new FlowLayout(FlowLayout.LEFT));
+        labelPanel2.setBackground(new Color(105, 161, 96));
+        labelPanel1.add(easyStageDesc);
+        labelPanel1.add(easyStageButtonPanel);
+        labelPanel2.add(gameGoal);
+        labelPanel2.add(wallDesc);
+        labelPanel2.add(obstacleDesc);
+        labelPanel2.add(goodLuckMessage);
+        labelPanel2.add(easyTimeLabel);
+
+        // Adding all the implemented components to the 'Easy' stage screen.
+        easyStagePanel.add(labelPanel1);
+        easyStagePanel.add(easyStageMap);
+        easyStagePanel.add(labelPanel2);
 
         return easyStagePanel;
     }
@@ -529,18 +544,30 @@ public class GameWindow extends JFrame {
         mediumStageMap.setAlignmentX(Component.CENTER_ALIGNMENT);
         mediumStageMap.setAlignmentY(Component.CENTER_ALIGNMENT);
 
-        // Adding all the implemented components to the 'Medium' stage screen.
+        // Adding a default button panel
         JPanel mediumStageButtonPanel = stageButtonPanel();
         mediumStageButtonPanel.setBackground(new Color(161, 147, 96));
-        mediumStagePanel.add(mediumStageDesc);
-        mediumStagePanel.add(mediumStageButtonPanel);
+
+        // Alignment of text labels
+        JPanel labelPanel1 = new JPanel();
+        labelPanel1.setLayout(new FlowLayout(FlowLayout.LEFT));
+        labelPanel1.setBackground(new Color(161, 147, 96));
+        JPanel labelPanel2 = new JPanel();
+        labelPanel2.setLayout(new FlowLayout(FlowLayout.LEFT));
+        labelPanel2.setBackground(new Color(161, 147, 96));
+        labelPanel1.add(mediumStageDesc);
+        labelPanel1.add(mediumStageButtonPanel);
+        labelPanel2.add(gameGoal);
+        labelPanel2.add(wallDesc);
+        labelPanel2.add(obstacleDesc);
+        labelPanel2.add(monsterDesc);
+        labelPanel2.add(goodLuckMessage);
+        labelPanel2.add(mediumTimeLabel);
+
+        // Adding all the implemented components to the 'Medium' stage screen.
+        mediumStagePanel.add(labelPanel1);
         mediumStagePanel.add(mediumStageMap);
-        mediumStagePanel.add(gameGoal);
-        mediumStagePanel.add(wallDesc);
-        mediumStagePanel.add(obstacleDesc);
-        mediumStagePanel.add(monsterDesc);
-        mediumStagePanel.add(goodLuckMessage);
-        mediumStagePanel.add(mediumTimeLabel);
+        mediumStagePanel.add(labelPanel2);
 
         return mediumStagePanel;
     }
@@ -584,17 +611,35 @@ public class GameWindow extends JFrame {
         // Set the stopwatch.
         hardTimeLabel = timeLabel();
 
-        // Adding all the implemented components to the 'Hard' stage screen.
+        // Adding stage map
+        GameStage hardStageMap = new GameStage(40, 40);
+        hardStageMap.setAlignmentX(Component.CENTER_ALIGNMENT);
+        hardStageMap.setAlignmentY(Component.CENTER_ALIGNMENT);
+
+        // Adding a default button panel
         JPanel hardStageButtonPanel = stageButtonPanel();
         hardStageButtonPanel.setBackground(new Color(161, 96, 96));
-        hardStagePanel.add(hardStageDesc);
-        hardStagePanel.add(hardStageButtonPanel);
-        hardStagePanel.add(gameGoal);
-        hardStagePanel.add(wallDesc);
-        hardStagePanel.add(obstacleDesc);
-        hardStagePanel.add(monsterDesc);
-        hardStagePanel.add(goodLuckMessage);
-        hardStagePanel.add(hardTimeLabel);
+
+        // Alignment of text labels
+        JPanel labelPanel1 = new JPanel();
+        labelPanel1.setLayout(new FlowLayout(FlowLayout.LEFT));
+        labelPanel1.setBackground(new Color(161, 96, 96));
+        JPanel labelPanel2 = new JPanel();
+        labelPanel2.setLayout(new FlowLayout(FlowLayout.LEFT));
+        labelPanel2.setBackground(new Color(161, 96, 96));
+        labelPanel1.add(hardStageDesc);
+        labelPanel1.add(hardStageButtonPanel);
+        labelPanel2.add(gameGoal);
+        labelPanel2.add(wallDesc);
+        labelPanel2.add(obstacleDesc);
+        labelPanel2.add(monsterDesc);
+        labelPanel2.add(goodLuckMessage);
+        labelPanel2.add(hardTimeLabel);
+
+        // Adding all the implemented components to the 'Hard' stage screen.
+        hardStagePanel.add(labelPanel1);
+        hardStagePanel.add(hardStageMap);
+        hardStagePanel.add(labelPanel2);
         
         return hardStagePanel;
     }
@@ -674,6 +719,10 @@ public class GameWindow extends JFrame {
         return leaderboardPanel;
     }
     
+    /** Run the game window with according GUI components.
+     * 
+     * @param a All arguments
+     */
     public static void main(String[] a) {
         SwingUtilities.invokeLater(() -> new GameWindow());
     }
