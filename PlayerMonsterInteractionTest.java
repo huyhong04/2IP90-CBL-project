@@ -15,10 +15,10 @@ public class PlayerMonsterInteractionTest {
     
     @Test
     public void testWallCollision() {
-        Wall wall = new Wall(0, 1);
+        GameObject wall = new GameObject(0, 1);
         
         player.moveDown();
-        if (player.collidesWith(wall)) {
+        if (player.collisionChecker(wall)) {
             player.stayStill();
         }
 
@@ -32,7 +32,7 @@ public class PlayerMonsterInteractionTest {
         // Monster at player's position.
         Monster monster = new Monster(0, 0);
 
-        if (player.collidesWith(monster)) {
+        if (player.collisionChecker(monster)) {
             player.die();
         }
 
@@ -44,12 +44,12 @@ public class PlayerMonsterInteractionTest {
         assertEquals(0, player.getPlayerX());
         assertEquals(0, player.getPlayerY());
     }
-    
+
     @Test
     public void testObstacleCollision() {
         Obstacle obstacle = new Obstacle(0, 0);
 
-        if (player.collidesWith(obstacle)) {
+        if (player.collisionChecker(obstacle)) {
             player.die();
         }
 

@@ -27,7 +27,7 @@ public class PlayerInteraction {
     }
 
 
-    public boolean collidesWith(GameObject obj) {
+    public boolean collisionChecker(GameObject obj) {
         return player.getPlayerX() == obj.getX() && player.getPlayerY() == obj.getY(); 
     }
     
