@@ -151,4 +151,29 @@ public class PlayerMovementTest {
         assertEquals(1, playerMovement.getPlayerX());
         assertEquals(1, playerMovement.getPlayerY());
     }
+
+    @Test
+    public void testMultipleRespawn() {
+        // Simulate 1st death.
+        playerMovement.die();
+        assertTrue(playerMovement.isDead());
+
+        playerMovement.respawn(1, 1);
+
+        // Verify the player is no longer dead.
+        assertFalse(playerMovement.isDead());
+        assertEquals(1, playerMovement.getPlayerX());
+        assertEquals(1, playerMovement.getPlayerY());
+
+        // Simulate 2nd death.
+        playerMovement.die();
+        assertTrue(playerMovement.isDead());
+
+        playerMovement.respawn(2, 2);
+
+        // Verify the player is no longer dead.
+        assertFalse(playerMovement.isDead());
+        assertEquals(2, playerMovement.getPlayerX());
+        assertEquals(2, playerMovement.getPlayerY());
+    }
 }
