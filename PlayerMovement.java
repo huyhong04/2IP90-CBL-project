@@ -57,43 +57,34 @@ public class PlayerMovement implements KeyListener {
         playerX = newX;
         playerY = newY;
         dead = false; 
-
     }
 
     // Methods used to check the player movement (mainly for testing).
     public void moveUp() {
-        if (playerY > 0) {
-            savePrevPosition();
-            playerY -= 1;
-            gameStage.updatePlayerPosition();
-        }
+        savePrevPosition();
+        playerX -= 1;
+        gameStage.updatePlayerPosition();
         System.out.println("Up");
     }
 
     public void moveDown() {
-        if (playerY < gameStage.getColSize() - 1) {
-            savePrevPosition();
-            playerY += 1;
-            gameStage.updatePlayerPosition();
-        }
+        savePrevPosition();
+        playerX += 1;
+        gameStage.updatePlayerPosition();
         System.out.println("Down");
     }
 
     public void moveLeft() {
-        if (playerX > 0) {
-            savePrevPosition();
-            playerX -= 1;
-            gameStage.updatePlayerPosition();
-        }
+        savePrevPosition();
+        playerY -= 1;
+        gameStage.updatePlayerPosition();
         System.out.println("Left");
     }
 
     public void moveRight() {
-        if (playerX < gameStage.getRowSize() - 1) {
-            savePrevPosition();
-            playerX += 1;
-            gameStage.updatePlayerPosition();
-        }
+        savePrevPosition();
+        playerY += 1;
+        gameStage.updatePlayerPosition();
         System.out.println("Right");
     }
 
@@ -112,7 +103,6 @@ public class PlayerMovement implements KeyListener {
         } else if (key == KeyEvent.VK_D || key == KeyEvent.VK_RIGHT) {
             moveRight();
         }
-        gameStage.updatePlayerPosition();
     }
 
     @Override
