@@ -140,15 +140,15 @@ public class PlayerMovementTest {
     @Test
     public void testRespawn() {
         // Simulate death.
-        player.die();
-        assertTrue(player.isDead());
+        playerMovement.die();
+        assertTrue(playerMovement.isDead());
 
-        player.respawn(1, 1);
+        playerMovement.respawn(1, 1);
 
         // Verify the player is no longer dead.
-        assertFalse(player.isDead());
+        assertFalse(playerMovement.isDead());
 
-        assertEquals(1, player.getPlayerX());
-        assertEquals(1, player.getPlayerY());
+        assertEquals(1, playerMovement.getPlayerX());
+        assertEquals(1, playerMovement.getPlayerY());
     }
 }
