@@ -543,6 +543,9 @@ public class GameWindow extends JFrame {
         GameStage mediumStageMap = new GameStage(20, 20);
         mediumStageMap.setAlignmentX(Component.CENTER_ALIGNMENT);
         mediumStageMap.setAlignmentY(Component.CENTER_ALIGNMENT);
+        mediumStageMap.setFocusable(true);
+        // mediumStageMap.requestFocusInWindow();
+        mediumStageMap.repaint();
 
         // Adding a default button panel
         JPanel mediumStageButtonPanel = stageButtonPanel();
@@ -568,6 +571,7 @@ public class GameWindow extends JFrame {
         mediumStagePanel.add(labelPanel1);
         mediumStagePanel.add(mediumStageMap);
         mediumStagePanel.add(labelPanel2);
+        SwingUtilities.invokeLater(() -> mediumStageMap.requestFocusInWindow());
 
         return mediumStagePanel;
     }
