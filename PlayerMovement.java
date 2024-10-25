@@ -52,6 +52,13 @@ public class PlayerMovement implements KeyListener {
         return dead;
     }
 
+    public void respawn(int newX, int newY) {
+        playerX = newX;
+        playerY = newY;
+        dead = false; 
+
+    }
+
     // Methods used to check the player movement (mainly for testing).
     public void moveUp() {
         playerY -= 1;
