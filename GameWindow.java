@@ -38,7 +38,6 @@ public class GameWindow extends JFrame {
 
     PlayerMovement player; // Player
 
-
     /** We use a card layout to allow navigation between different panels
      *  in the game window.
      */
@@ -470,7 +469,7 @@ public class GameWindow extends JFrame {
         easyTimeLabel = timeLabel();
 
         // Adding stage map
-        GameStage easyStageMap = new GameStage(10, 10);
+        GameStage easyStageMap = new GameStage(this, GameStage.Difficulty.EASY);
         easyStageMap.setAlignmentX(Component.CENTER_ALIGNMENT);
         easyStageMap.setAlignmentY(Component.CENTER_ALIGNMENT);
 
@@ -540,7 +539,7 @@ public class GameWindow extends JFrame {
         mediumTimeLabel = timeLabel();
 
         // Adding stage map
-        GameStage mediumStageMap = new GameStage(20, 20);
+        GameStage mediumStageMap = new GameStage(this, GameStage.Difficulty.MEDIUM);
         mediumStageMap.setAlignmentX(Component.CENTER_ALIGNMENT);
         mediumStageMap.setAlignmentY(Component.CENTER_ALIGNMENT);
 
@@ -614,7 +613,7 @@ public class GameWindow extends JFrame {
         hardTimeLabel = timeLabel();
 
         // Adding stage map
-        GameStage hardStageMap = new GameStage(40, 40);
+        GameStage hardStageMap = new GameStage(this, GameStage.Difficulty.HARD);
         hardStageMap.setAlignmentX(Component.CENTER_ALIGNMENT);
         hardStageMap.setAlignmentY(Component.CENTER_ALIGNMENT);
 
@@ -649,7 +648,7 @@ public class GameWindow extends JFrame {
     /** Starts the stopwatch when the listeners for the 'Easy', 'Medium', and 'Hard'
      *  stage screens are activated (the corresponding respective buttons are clicked).
      */
-    private void startStageTime() {
+    public void startStageTime() {
         // Checks if there is already a stopwatch running.
         if (stageTime != null && stageTime.isRunning()) {
             stageTime.stop();
@@ -677,7 +676,7 @@ public class GameWindow extends JFrame {
      *  and 'Quit Game' stage screens are activated 
      *  (the corresponding respective buttons are clicked).
      */
-    private void stopStageTime() {
+    public void stopStageTime() {
         if (stageTime != null && stageTime.isRunning()) {
             stageTime.stop();
         }
