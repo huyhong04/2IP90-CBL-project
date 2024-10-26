@@ -46,6 +46,8 @@ public class GameStage extends JPanel {
 
     private GameWindow gameWindow;
 
+    private String playerName;
+
     public boolean canMoveTo(int x, int y) {
         // Is In Bounds
         boolean isInBounds = (0 <= x && x < rowSize) && (0 <= y && y < colSize);
@@ -130,13 +132,19 @@ public class GameStage extends JPanel {
         } 
         if (occupied == Tile.GOAL) {
             gameWindow.stopStageTime();
-            JOptionPane.showMessageDialog(this, "You win!");
+            int finishTime = gameWindow.getElapsedTime();
+            gameWindow.registerScore(difficulty, playerName, finishTime);
+            JOptionPane.showMessageDialog(this, 
+            "You win! You can see your score in the leaderboards after closing this message."
+            );
+            gameWindow.showLeaderboard();
         }
         if (player.isDead()) {
             gameWindow.stopStageTime();
-            JOptionPane.showMessageDialog(this, "You died.");
-            // leaderboard shit
-            // exit
+            JOptionPane.showMessageDialog(this, 
+            "You died. You can choose a stage and try again after closing this message."
+            );
+            gameWindow.showStageSelectionScreen();
         }
         draw();
     }
@@ -216,17 +224,21 @@ public class GameStage extends JPanel {
 
     public void generateMap() {
         double scaling = (double) difficulty.ordinal();
-        double wallWeight = 2.5 * (scaling + 1.0);
-        double obstacleWeight = 2.5 * (scaling + 1.0);
-        double monsterWeight = 1.5 * (scaling);
+        double wallWeight = 1.5 * (scaling + 1.0);
+        double obstacleWeight = 1.5 * (scaling + 1.0);
+        double monsterWeight = 3 * (scaling);
         double emptyWeight = wallWeight + obstacleWeight + monsterWeight;
 
         TreeMap<Double, Tile> treeMap = new TreeMap<>();
 
-        treeMap.put(treeMap.keySet().stream().mapToDouble(i -> i).sum() + monsterWeight, Tile.MONSTER);
-        treeMap.put(treeMap.keySet().stream().mapToDouble(i -> i).sum() + obstacleWeight, Tile.OBSTACLE); // 0-5
-        treeMap.put(treeMap.keySet().stream().mapToDouble(i -> i).sum() + wallWeight, Tile.WALL); // 5-10
-        treeMap.put(treeMap.keySet().stream().mapToDouble(i -> i).sum() + emptyWeight, Tile.EMPTY); // 10-20
+        treeMap.put(treeMap.keySet().stream().mapToDouble(i -> i).sum() 
+            + monsterWeight, Tile.MONSTER);
+        treeMap.put(treeMap.keySet().stream().mapToDouble(i -> i).sum() 
+            + obstacleWeight, Tile.OBSTACLE); // 0-5
+        treeMap.put(treeMap.keySet().stream().mapToDouble(i -> i).sum() 
+            + wallWeight, Tile.WALL); // 5-10
+        treeMap.put(treeMap.keySet().stream().mapToDouble(i -> i).sum() 
+            + emptyWeight, Tile.EMPTY); // 10-20
 
         double maxWeight = treeMap.keySet().stream().mapToDouble(i -> i).max().getAsDouble();
         Random random = new Random();
