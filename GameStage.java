@@ -1,7 +1,11 @@
 import java.awt.*;
-// import java.util.LinkedList; // For BFS algorithm
-// import java.util.Queue; // For BFS algorithm
+import java.util.Arrays;
+import java.util.Map;
 import java.util.Random;
+import java.util.TreeMap;
+import java.util.stream.IntStream;
+import java.awt.event.ActionEvent;
+
 import javax.swing.*;
 
 /** This generates the stage map, which has a different size depending on the chosen difficulty.
@@ -19,199 +23,221 @@ import javax.swing.*;
  */
 public class GameStage extends JPanel {
 
+    private static enum Tile {
+        EMPTY, WALL, OBSTACLE, MONSTER, GOAL, START
+    }
+
+    public static enum Difficulty {
+        EASY, MEDIUM, HARD
+    }
+    private InputMap inputMap;
+    private ActionMap actionMap;
+
+    private Difficulty difficulty;
     private int rowSize; // Number of rows in the stage map
 
     private int colSize; // Number of columns in the stage map
 
-    private JLabel[][] stageMap; // A 2D array to represent the cells in the stage map
+    private Tile[][] stageMap; // A 2D array to represent the cells in the stage map
 
-    PlayerMovement player;
+    private JLabel[][] graphics;
+
+    private PlayerMovement player;
+
+    private GameWindow gameWindow;
+
+    public boolean canMoveTo(int x, int y) {
+        // Is In Bounds
+        boolean isInBounds = (0 <= x && x < rowSize) && (0 <= y && y < colSize);
+        return isInBounds && stageMap[x][y] != Tile.WALL;
+    }
+    public void draw() {
+        for (int i = 0; i < rowSize; i ++) {
+            for (int j = 0; j < colSize; j++) {
+                switch (stageMap[i][j]) {
+                    case EMPTY -> {
+                        graphics[i][j].setBackground(Color.WHITE);
+                    }
+                    case MONSTER -> {
+                        graphics[i][j].setBackground(Color.RED);
+                    }
+                    case OBSTACLE -> {
+                        graphics[i][j].setBackground(Color.YELLOW);
+                    }
+                    case GOAL -> {
+                        graphics[i][j].setBackground(Color.GREEN);
+                    }
+                    case START -> {
+                        graphics[i][j].setBackground(Color.BLACK);
+                    }
+                    case WALL -> {
+                        graphics[i][j].setBackground(new Color(84, 61, 43));
+                    }
+                }
+            }
+        }
+        graphics[player.getPlayerY()][player.getPlayerX()].setBackground(Color.BLUE);
+        revalidate();
+    }
+
+    public void tick() {
+        Random random = new Random();
+        
+        // Do the monster shuffle
+        for (int i = 0; i < rowSize; i++) {
+            for (int j = 0; j < colSize; j++) {
+                if (stageMap[i][j] != Tile.MONSTER) {
+                    continue;
+                } else {
+                    int move = random.nextInt(4);
+                    switch (move) {
+                        case 0 -> {
+                            if (0 <= j - 1 && j - 1 < colSize && stageMap[i][j - 1] != Tile.GOAL) {
+                                stageMap[i][j] = Tile.EMPTY;
+                                stageMap[i][j - 1] = Tile.MONSTER;
+                            }
+                        }
+                        case 1 -> {
+                            if (0 <= i + 1 && i + 1 < colSize && stageMap[i + 1][j] != Tile.GOAL) {
+                                stageMap[i][j] = Tile.EMPTY;
+                                stageMap[i + 1][j] = Tile.MONSTER;
+                            }
+                        }
+                        case 2 -> {
+                            if (0 <= j + 1 && j + 1 < colSize && stageMap[i][j + 1] != Tile.GOAL) {
+                                stageMap[i][j] = Tile.EMPTY;
+                                stageMap[i][j + 1] = Tile.MONSTER;
+                            }
+                        }
+                        case 3 -> {
+                            if (0 <= i - 1 && i - 1 < colSize && stageMap[i - 1][j] != Tile.GOAL) {
+                                stageMap[i][j] = Tile.EMPTY;
+                                stageMap[i - 1][j] = Tile.MONSTER;
+                            }
+                        }
+                        default -> {
+                            throw new IllegalStateException();
+                        }
+                    }
+                }
+            }
+        }
+
+        Tile occupied = stageMap[player.getPlayerY()][player.getPlayerX()];
+
+        if (occupied == Tile.OBSTACLE || occupied == Tile.MONSTER) {
+            player.die();
+        } 
+        if (occupied == Tile.GOAL) {
+            gameWindow.stopStageTime();
+            JOptionPane.showMessageDialog(this, "You win!");
+        }
+        if (player.isDead()) {
+            gameWindow.stopStageTime();
+            JOptionPane.showMessageDialog(this, "You died.");
+            // leaderboard shit
+            // exit
+        }
+        draw();
+    }
 
     /** Create a layout for the stage map.
      * 
      * @param rowSize The number of rows in the stage map.
      * @param colSize The number of columns in the stage map.
      */
-    public GameStage(int rowSize, int colSize) {
-        super(new GridLayout(rowSize, colSize));
-        this.rowSize = rowSize;
-        this.colSize = colSize;
-        this.stageMap = new JLabel[rowSize][colSize]; // Initializes the stage map
+    public GameStage(GameWindow gameWindow, Difficulty difficulty) {
+        this.gameWindow = gameWindow;
+        this.difficulty = difficulty;
+        switch (difficulty) {
+            case EASY -> {
+                rowSize = 10;
+                colSize = 10;
+            } 
+            case MEDIUM -> {
+                rowSize = 20;
+                colSize = 20;
+            }
+            case HARD -> {
+                rowSize = 30;
+                colSize = 30;
+            }
+        }
 
-        initializeStage();
+        this.inputMap = this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        this.actionMap = this.getActionMap();
+
+        this.setLayout(new GridLayout(rowSize, colSize));
 
         // Initialize the player at the start of the stage map
         player = new PlayerMovement(0, 0, this);
-        this.addKeyListener(player);
+
+        // Initialise Array with nothing in it (Tile.EMPTY)
+        this.stageMap = new Tile[rowSize][colSize]; // Initializes the stage map
+        this.graphics = new JLabel[rowSize][colSize];
+        for (int i = 0; i < rowSize; i++) {
+            for (int j = 0; j < colSize; j++) {
+                graphics[i][j] = new JLabel();
+                graphics[i][j].setBackground(Color.black);
+                graphics[i][j].setOpaque(true);
+                graphics[i][j].setBorder(BorderFactory.createLineBorder(Color.BLACK));
+                add(graphics[i][j]);
+            }
+        }
+        generateMap();
+        
+        draw();
+
         this.setFocusable(true);
-        this.requestFocusInWindow();
-        System.out.println("KeyListener added to GameStage");
-        updatePlayerPosition();
+
+        register("UP", () -> player.moveUp(),
+                new KeyStroke[] {KeyStroke.getKeyStroke("W")});
+        register("DOWN", () -> player.moveDown(),
+            new KeyStroke[] {KeyStroke.getKeyStroke("S")});
+        register("LEFT", () -> player.moveLeft(),
+            new KeyStroke[] {KeyStroke.getKeyStroke("A")});
+        register("RIGHT", () -> player.moveRight(),
+            new KeyStroke[] {KeyStroke.getKeyStroke("D")});
+
         setPreferredSize(new Dimension(400, 400));
     }
 
-    @Override
-    public boolean isFocusable() {
-        return true;
-    }
-
-    public void updatePlayerPosition() {
-        if (stageMap[player.getPreviousX()][player.getPreviousY()] != null) {
-            stageMap[player.getPreviousX()][player.getPreviousY()].setBackground(new Color(153, 152, 156));
+    public void register(String name, Runnable action, KeyStroke[] keys) {
+        for (KeyStroke key: keys) {
+            inputMap.put(key, name);
         }
-
-        if (stageMap[player.getPlayerX()][player.getPlayerY()] != null) {
-            stageMap[player.getPlayerX()][player.getPlayerY()].setBackground(Color.BLUE);
-        }
-
-        repaint();
+        actionMap.put(name, new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                action.run();
+            }
+        });
     }
 
-    public int getRowSize() {
-        return rowSize;
-    }
+    public void generateMap() {
+        double scaling = (double) difficulty.ordinal();
+        double wallWeight = 2.5 * (scaling + 1.0);
+        double obstacleWeight = 2.5 * (scaling + 1.0);
+        double monsterWeight = 1.5 * (scaling);
+        double emptyWeight = wallWeight + obstacleWeight + monsterWeight;
 
-    public int getColSize() {
-        return colSize;
-    }
+        TreeMap<Double, Tile> treeMap = new TreeMap<>();
 
-    /** Initializes the formatting and coloring of the stage map.
-     */
-    private void initializeStage() {
-        for (int r = 0; r < rowSize; r++) {
-            for (int c = 0; c < colSize; c++) {
-                JLabel cell = new JLabel();
-                cell.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
-                cell.setOpaque(true);
-                cell.setBackground(new Color(153, 152, 156));
-                stageMap[r][c] = cell;
-                add(cell);
+        treeMap.put(treeMap.keySet().stream().mapToDouble(i -> i).sum() + monsterWeight, Tile.MONSTER);
+        treeMap.put(treeMap.keySet().stream().mapToDouble(i -> i).sum() + obstacleWeight, Tile.OBSTACLE); // 0-5
+        treeMap.put(treeMap.keySet().stream().mapToDouble(i -> i).sum() + wallWeight, Tile.WALL); // 5-10
+        treeMap.put(treeMap.keySet().stream().mapToDouble(i -> i).sum() + emptyWeight, Tile.EMPTY); // 10-20
+
+        double maxWeight = treeMap.keySet().stream().mapToDouble(i -> i).max().getAsDouble();
+        Random random = new Random();
+        // Player spawns at 0, 0
+        for (int i = 0; i < rowSize; i++) {
+            for (int j = 0; j < colSize; j++) {
+                double randomWeight = random.nextDouble() * maxWeight;
+                stageMap[i][j] = treeMap.ceilingEntry(randomWeight).getValue();
             }
         }
-
-        // Customizing game elements onto the stage map.
-        gameElements();
-    }
-
-    /** Create the number of game elements for the stage map according
-     *  to the chosen difficulty.
-     */
-    private void gameElements() {
-
-        int wallCount; // Number of walls randomly spawned in the stage map.
-        int obstacleCount; // Number of obstacles randomly spawned in the stage map.
-        int monsterCount; // Number of monsters randomly spawned in the stage map.
-        // boolean validPath = true; // There is a path from the player to the goal.
-
-        // while (validPath) {
-        // Distribute the number of spawned game elements with the given number of
-        // rows and columns in the stage map.
-        wallCount = ((rowSize * colSize) / 10);
-        obstacleCount = ((rowSize * colSize) / 12);
-        monsterCount = ((rowSize * colSize) / 15);
-
-        // Set the spawn position of the player and the goal.
-        // Note that these spawn positions aren't random.
-        stageMap[0][0].setBackground(Color.BLUE); // Set the player color as blue
-        // Set the goal color as green
-        stageMap[rowSize - 1][colSize - 1].setBackground(new Color(68, 255, 0)); 
-
-        // Generate game elements with the corresponding chosen colors.
-        generateElements(wallCount, new Color(77, 58, 44));
-        generateElements(obstacleCount, Color.YELLOW);
-        generateElements(monsterCount, Color.RED);
-
-        // Checks for an available path from the player to the goal.
-        // validPath = findPath();
-    }
-
-    /** Generate elements randomly onto the stage map.
-     * 
-     * @param elementCount The number of game elements.
-     * @param elementColor The color of the game element.
-     */
-    private void generateElements(int elementCount, Color elementColor) {
-
-        int cellX; // A cell in a row
-        int cellY; // A cell in a column
-
-        Random random = new Random(); // Create random object for random spawning of game elements.
-
-        while (elementCount > 0) {
-            // Decrements the element count until the sufficient number of game elements is spawned.
-            elementCount--;
-            // Gets a random cell at a random row and column according to the
-            // number of rows and columns in the stage map.
-            cellX = random.nextInt(rowSize);
-            cellY = random.nextInt(colSize);
-
-            // Avoid putting game elements where the player and goal is spawned.
-            if ((cellX == 0 && cellY == 0) || (cellX == rowSize - 1 && cellY == colSize - 1)
-                || (!stageMap[cellX][cellY].getBackground().equals(new Color(153, 152, 156)))) {
-                continue;
-            }
-
-            // Set the according game element at a random cell in the stage map
-            // with the corresponding element color.
-            stageMap[cellX][cellY].setBackground(elementColor);
-        }
-    }
-
-    // /** Implement a BFS algorithm to determine if there is a path
-    //  *  from the player to the goal.
-    //  * 
-    //  * @return true if there is this path, false if otherwise.
-    //  */
-    // private boolean findPath() {
-
-    //     // Initialize an array with visited cells.
-    //     boolean[][] visitedCells = new boolean[rowSize][colSize];
-    //     Queue<Point> cellQueue = new LinkedList<>();
-    //     cellQueue.add(new Point(0, 0));
-    //     visitedCells[0][0] = true; // Where the player is spawned.
-
-    //     // Directions for moving the player.
-    //     int[] rowDirection = {-1, 1, 0, 0};
-    //     int[] colDirection = {0, 0, -1, 1};
-
-    //     while (!cellQueue.isEmpty()) {
-    //         Point currentCell = cellQueue.poll(); // Takes the current cell in the queue.
-    //         int currentRow = currentCell.x;
-    //         int currentCol = currentCell.y;
-
-    //         // Checks if the player has reached the goal in this path-finding search.
-    //         if (currentRow == rowSize - 1 && currentCol == colSize - 1) {
-    //             return true;
-    //         }
-
-    //         // Check for neighbor cells
-    //         for (int i = 0; i < 4; i++) {
-    //             int newRow = currentRow + rowDirection[i];
-    //             int newCol = currentCol + colDirection[i];
-
-    //             // Checks if this path is within bounds and if there are any unvisited cells.
-    //             if (stageMapBounds(newRow, newCol) 
-    //                 && !visitedCells[newRow][newCol]
-    //                 && stageMap[newRow][newCol].getBackground().equals(new Color(153, 152, 156))) {
-                    
-    //                 cellQueue.add(new Point(newRow, newCol));
-    //                 visitedCells[newRow][newCol] = true;
-    //             }
-    //         }
-    //     }
-
-    //     return false; // There is no path from the player to the goal.
-    // }
-
-    /** Checks if the path-finding algorithm stays within bounds of the stage map.
-     * 
-     * @param row The row where the player is at in the available path 
-     *      (during the path-finding algorithm).
-     * @param col The column where the player is at in the available path 
-     *      (during the path-finding algorithm).
-     * @return true if this path-finding algorithm doesn't go out of bounds, false otherwise.
-     */
-    private boolean stageMapBounds(int row, int col) {
-        return ((row >= 0 && row < rowSize) && (col >= 0 && col < colSize));
+        stageMap[0][0] = Tile.START;
+        stageMap[rowSize - 1][colSize - 1] = Tile.GOAL;
     }
 }
