@@ -1,10 +1,12 @@
-import java.awt.event.*;
+import javax.swing.*;
 
-public class PlayerMovement implements KeyListener {
+public class PlayerMovement {
     
-    private int playerX, playerY;  // Position of the player.
-    private int previousX, previousY; // Previous valid position.
-    private boolean dead;
+    private int playerX; // Position of the player (x-coordinate)
+    private int playerY;  // Position of the player (y-coordinate)
+    private int previousX; // Previous valid position (x-coordinate)
+    private int previousY; // Previous valid position (y-coordinate)
+    private boolean dead; // Dead
     private GameStage gameStage;
 
     public PlayerMovement(int startX, int startY, GameStage gameStage) {
@@ -46,6 +48,7 @@ public class PlayerMovement implements KeyListener {
     }
 
     public void die() {
+        System.out.println("PLAYER DEAD");
         dead = true;
     }
 
@@ -61,57 +64,32 @@ public class PlayerMovement implements KeyListener {
 
     // Methods used to check the player movement (mainly for testing).
     public void moveUp() {
-        savePrevPosition();
-        playerX -= 1;
-        gameStage.updatePlayerPosition();
-        System.out.println("Up");
+        if (gameStage.canMoveTo(playerY - 1, playerX)) {
+            playerY -= 1;
+        }
+        gameStage.tick();
     }
 
     public void moveDown() {
-        savePrevPosition();
-        playerX += 1;
-        gameStage.updatePlayerPosition();
-        System.out.println("Down");
+        if (gameStage.canMoveTo(playerY + 1, playerX)) {
+            playerY += 1;
+        }
+        gameStage.tick();
     }
 
     public void moveLeft() {
-        savePrevPosition();
-        playerY -= 1;
-        gameStage.updatePlayerPosition();
-        System.out.println("Left");
+        if (gameStage.canMoveTo(playerY, playerX - 1 )) {
+            playerX -= 1;    
+        }
+        gameStage.tick();
     }
 
     public void moveRight() {
-        savePrevPosition();
-        playerY += 1;
-        gameStage.updatePlayerPosition();
-        System.out.println("Right");
-    }
-
-    @Override
-    public void keyPressed(KeyEvent e) {
-        int key = e.getKeyCode();
-        System.out.println("Key pressed: " + KeyEvent.getKeyText(key));
-
-        // The key will move the player based on 'WASD' or arrow keys.
-        if (key == KeyEvent.VK_W || key == KeyEvent.VK_UP) {
-            moveUp();
-        } else if (key == KeyEvent.VK_A || key == KeyEvent.VK_LEFT) {
-            moveLeft();
-        } else if (key == KeyEvent.VK_S || key == KeyEvent.VK_DOWN) {
-            moveDown();
-        } else if (key == KeyEvent.VK_D || key == KeyEvent.VK_RIGHT) {
-            moveRight();
+        if (gameStage.canMoveTo(playerY, playerX + 1)) {
+            playerX += 1;
         }
+        gameStage.tick();
     }
 
-    @Override
-    public void keyTyped(KeyEvent e) {
-        // Used if necessary.
-    }
 
-    @Override
-    public void keyReleased(KeyEvent e) {
-        // Used if necessary.
-    }
 }
