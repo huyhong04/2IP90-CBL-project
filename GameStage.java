@@ -1,11 +1,7 @@
 import java.awt.*;
-import java.util.Arrays;
-import java.util.Map;
+import java.awt.event.ActionEvent;
 import java.util.Random;
 import java.util.TreeMap;
-import java.util.stream.IntStream;
-import java.awt.event.ActionEvent;
-
 import javax.swing.*;
 
 /** This generates the stage map, which has a different size depending on the chosen difficulty.
