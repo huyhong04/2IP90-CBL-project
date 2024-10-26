@@ -1,6 +1,12 @@
+// All imports needed to run the game window
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import javax.swing.*;
 
 /** This generates the game window along with the functionality to
@@ -16,9 +22,9 @@ public class GameWindow extends JFrame {
 
     private JFrame gameFrame; // Frame for the game
 
-    private CardLayout card; // Card layout for the game window
-
     private JPanel cardPanel; // Main panel
+
+    private CardLayout card; // Card layout for the game window
 
     private Timer stageTime; // Timer object which represents a stopwatch during the stage
 
@@ -27,6 +33,8 @@ public class GameWindow extends JFrame {
     private JLabel mediumTimeLabel; // Label to display time taken to complete the 'Easy' stage
 
     private JLabel hardTimeLabel; // Label to display time taken to complete the 'Easy' stage
+
+    private final Map<GameStage.Difficulty, Map<String, List<Integer>>> scores = new HashMap();
 
     int elapsedTime; // Elapsed time in seconds (changing digit)
 
@@ -42,7 +50,6 @@ public class GameWindow extends JFrame {
      *  in the game window.
      */
     public GameWindow() {
-        // 
         card = new CardLayout();
         cardPanel = new JPanel(card); // Configure game panel with CardLayout
         gameFrame = new JFrame("Escapade"); // Set game title.
@@ -50,6 +57,10 @@ public class GameWindow extends JFrame {
         gameFrame.setSize(screenSizeHorizontal, screenSizeVertical); // Set screen dimensions
         gameFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         gameFrame.setLocationRelativeTo(null); // Centering the game window to the computer screen
+        
+        for (GameStage.Difficulty difficulty : GameStage.Difficulty.values()) {
+            scores.put(difficulty, new HashMap<>());
+        }
 
         gameScreen(); // Calls the GUI components in the home screen
     }
@@ -255,7 +266,7 @@ public class GameWindow extends JFrame {
      * 
      *  @return stageSelectionPanel (the stage selection panel which is a JPanel).
      */
-    private JPanel stageSelectionPanel() {
+    public JPanel stageSelectionPanel() {
         // Set and customize panel for the stage selection screen
         JPanel stageSelectionPanel = new JPanel();
         stageSelectionPanel.setBackground(new Color(39, 105, 135));
@@ -315,6 +326,7 @@ public class GameWindow extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 startStageTime();
+                cardPanel.add(easyStage(), "Easy");
                 card.show(cardPanel, "Easy");
             }
         });
@@ -323,6 +335,7 @@ public class GameWindow extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 startStageTime();
+                cardPanel.add(mediumStage(), "Medium");
                 card.show(cardPanel, "Medium");
             }
         });
@@ -331,6 +344,7 @@ public class GameWindow extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 startStageTime();
+                cardPanel.add(hardStage(), "Hard");
                 card.show(cardPanel, "Hard");
             }
         });
@@ -348,6 +362,10 @@ public class GameWindow extends JFrame {
         stageSelectionPanel.add(Box.createVerticalGlue());
 
         return stageSelectionPanel;
+    }
+
+    public void showStageSelectionScreen() {
+        card.show(cardPanel, "Stage Selection");
     }
 
     /** Creates a button panel with the "Quit Stage", "Quit Game Session", and "Quit Game" buttons.
@@ -431,6 +449,11 @@ public class GameWindow extends JFrame {
         timeLabel.setAlignmentY(BOTTOM_ALIGNMENT);
 
         return timeLabel;
+    }
+
+    // Method to get the elapsed time
+    public int getElapsedTime() {
+        return elapsedTime;
     }
 
     /** Formatting and adding all prior components (via methods) into the 'Easy' stage screen.
@@ -682,16 +705,70 @@ public class GameWindow extends JFrame {
         }
     }
 
-    /** Shows 10 stage plays with the highest scores, including the rank, player name, and stage.
+    /**
+     * 
+     */
+    public void showLeaderboard() {
+        card.show(cardPanel, "Leaderboard");
+    }
+
+    /**
+     * 
+     */
+    private static class Pair<A, B> {
+        public A a;
+        public B b;
+        public Pair(A a, B b) {
+            this.a = a;
+            this.b = b;
+        }
+    }
+
+    /**
+     * 
+     * @param difficulty
+     * @param playerName
+     * @param score
+     */
+    public void registerScore(GameStage.Difficulty difficulty, String playerName, int score) {
+        Map<String, List<Integer>> playerFinishTimes = scores.getOrDefault(difficulty, 
+            new HashMap<>());
+        List<Integer> finishTimes = playerFinishTimes.getOrDefault(playerName, new ArrayList<>());
+        finishTimes.add(score);
+        playerFinishTimes.put(playerName, finishTimes);
+        scores.put(difficulty, playerFinishTimes);
+    }
+
+    /**
+     * 
+     * @param difficulty
+     * @return
+     */
+    public List<Pair<String, Integer>> getScores(GameStage.Difficulty difficulty) {
+        return scores.get(difficulty).entrySet().stream().flatMap(entry -> {
+            return entry.getValue().stream().map(value -> {
+                return new Pair<>(entry.getKey(), value);
+            });
+        }).sorted(new Comparator<Pair<String, Integer>>() {
+
+            @Override
+            public int compare(GameWindow.Pair<String, Integer> o1, 
+                GameWindow.Pair<String, Integer> o2) {
+                return o1.b.compareTo(o2.b);
+            }
+           
+        }).toList();
+    }
+
+    /** Shows 10 stage plays with the highest scores, including the player name, and stage.
      * 
      * @return leaderboardPanel, the leaderboard screen.
      */
     private JPanel leaderboardPanel() {
 
         JPanel leaderboardPanel = new JPanel();
-        BoxLayout leaderboardLayout = new BoxLayout(leaderboardPanel, BoxLayout.Y_AXIS);
         leaderboardPanel.setBackground(new Color(39, 92, 135));
-        leaderboardPanel.setLayout(leaderboardLayout);
+        leaderboardPanel.setLayout(new BoxLayout(leaderboardPanel, BoxLayout.Y_AXIS));
 
         JLabel leaderboardText = new JLabel(
             "Welcome to the leaderboard! The highest 10 scores are shown here."
@@ -715,7 +792,6 @@ public class GameWindow extends JFrame {
                 card.show(cardPanel, "Home Screen");
             }
         });
-
         return leaderboardPanel;
     }
     
