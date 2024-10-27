@@ -141,7 +141,7 @@ public class PlayerMovement {
      * in GameStage.
      */
     public void moveLeft() {
-        if (gameStage.canMoveTo(playerY, playerX - 1 )) {
+        if (gameStage.canMoveTo(playerY, playerX - 1)) {
             playerX -= 1;    
         }
         gameStage.tick();
