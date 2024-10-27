@@ -217,18 +217,18 @@ public class GameStage extends JPanel {
                 // Density of game elements in the 'Easy' stage map.
                 wallWeight = 0.5 * (scaling + 1.0);
                 obstacleWeight = 0.25 * (scaling + 1.0);
-                monsterWeight = 1 * (scaling);
+                monsterWeight = 0.125 * (scaling + 1.0);
             } 
             case MEDIUM -> {
                 // Density of game elements in the 'Medium' stage map.
-                wallWeight = 4 * (scaling + 1.0);
+                wallWeight = 6 * (scaling + 1.0);
                 obstacleWeight = 3 * (scaling + 1.0);
                 monsterWeight = 2 * (scaling); 
             }
             case HARD -> {
                 // Density of game elements in the 'Hard' stage map.
-                wallWeight = 10 * (scaling + 1.0);
-                obstacleWeight = 8 * (scaling + 1.0);
+                wallWeight = 12 * (scaling + 1.0);
+                obstacleWeight = 8 * (scaling);
                 monsterWeight = 4 * (scaling);
             }
             default -> {
