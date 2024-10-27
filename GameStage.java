@@ -52,6 +52,14 @@ public class GameStage extends JPanel {
 
     private String playerName; // The inputted player name.
 
+    /** Set player name as the inputted player name.
+     * 
+     * @param playerName Inputted player name.
+     */
+    public void setPlayerName(String playerName) {
+        this.playerName = playerName;
+    }
+
     /** Create a layout for the stage map.
      * 
      *  @param gameWindow The game window.
@@ -77,6 +85,9 @@ public class GameStage extends JPanel {
             case HARD -> {
                 rowSize = 40;
                 colSize = 40;
+            }
+            default -> {
+                // No other cases to cover since there are only 3 stage difficulties.
             }
         }
 
@@ -172,31 +183,58 @@ public class GameStage extends JPanel {
      * 
      *  We compute the density of the game elements using weights, 
      *  allowing for easier modifications.
-     *  In general, the probability for the game elements are calculated as follows:
-     *  - Wall weight is some positive float,
-     *  - Obstacle weight is some positive float,
-     *  - Monster weight is some positive float,
-     *  - Empty cells weight is the sum of the wall, obstacle and monster weights.
-     *  - Total weights is the sum of the all the weights.
+     *  In general, the density for the game elements are calculated as follows:
+     *  - Scaling (s) is the scale factor based on the stage difficulty, where 0 is for 'Easy',
+     *  '1' is for 'Medium' and '2' is for 'Hard'
+     *  - Wall weight (w) is some positive float,
+     *  - Obstacle weight (o) is some positive float,
+     *  - Monster weight (m) is some positive float,
+     *  - Empty cells weight (c) is the sum of the wall, obstacle and monster weights.
+     *  - Total weights (t) is the sum of the all the weights.
      *  Then the probability of a certain game element in the stage map is its weight
      *  divided by the total weights.
-     *  Note that the empty weights always take up 50% of the stage map.
+     * 
+     *  The probability of walls in the stage map is:
+     *  (w * (s + 1) / (t + c)).
+     *  The probability of obstacles in the stage map is:
+     *  (o * (s + 1) / (t + c)).
+     *  The probability of monsters in the stage map is:
+     *  (m * s / (t + c)).
+     *  The probability of empty cells in the stage map is 1/2.
      */
     public void generateMap() {
         /* Returns the difficulty based on the enum order for difficulties,
          * where 'Easy' has scaling 0, 'Medium' has scaling 1, and 'Hard' has scaling 2.
          */
         double scaling = (double) difficulty.ordinal();
+        double wallWeight = 0;
+        double obstacleWeight = 0;
+        double monsterWeight = 0;
 
-        /* For example, in the 'Medium' stage:
-         * - The probability of walls is 3 / 15 (approx. 22.2%).
-         * - The probability of obstacles is 2.5 / 15 (approx. 18.5%).
-         * - The probability of monsters is 2 / 15 (approx. 14.8%).
-         * - The probability of empty cells is 7.5 / 15 (50%).
-         */
-        double wallWeight = 1.5 * (scaling + 1.0); // Density of walls on the stage map.
-        double obstacleWeight = 1.25 * (scaling + 1.0); // Density of obstacles on the stage map.
-        double monsterWeight = 2 * (scaling); // Density of monsters on the stage map.
+        // Generate density of game elements based on stage difficulty.
+        switch (difficulty) {
+            case EASY -> {
+                // Density of game elements in the 'Easy' stage map.
+                wallWeight = 0.5 * (scaling + 1.0);
+                obstacleWeight = 0.25 * (scaling + 1.0);
+                monsterWeight = 1 * (scaling);
+            } 
+            case MEDIUM -> {
+                // Density of game elements in the 'Medium' stage map.
+                wallWeight = 4 * (scaling + 1.0);
+                obstacleWeight = 3 * (scaling + 1.0);
+                monsterWeight = 2 * (scaling); 
+            }
+            case HARD -> {
+                // Density of game elements in the 'Hard' stage map.
+                wallWeight = 10 * (scaling + 1.0);
+                obstacleWeight = 8 * (scaling + 1.0);
+                monsterWeight = 4 * (scaling);
+            }
+            default -> {
+                // Do nothing, since there are only 3 stage difficulties.
+            }
+        }
         double emptyWeight = wallWeight + obstacleWeight + monsterWeight; // Density of empty cells.
 
         // Use a tree map to map the following weights to the corresponding game elements.
