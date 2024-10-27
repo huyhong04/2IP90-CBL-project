@@ -1,4 +1,4 @@
-// All imports needed to run the game window
+// All imports needed to run the game window.
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -34,7 +34,10 @@ public class GameWindow extends JFrame {
 
     private JLabel hardTimeLabel; // Label to display time taken to complete the 'Easy' stage
 
-    private final Map<GameStage.Difficulty, Map<String, List<Integer>>> scores = new HashMap();
+    private final Map<GameStage.Difficulty, Map<String, List<Integer>>> scores = new HashMap(); 
+    /* Creates a map of maps, where the key is the stage difficulty, 
+     * and the value maps the player name to the corresponding finished stage time.
+     */
 
     int elapsedTime; // Elapsed time in seconds (changing digit)
 
@@ -58,6 +61,7 @@ public class GameWindow extends JFrame {
         gameFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         gameFrame.setLocationRelativeTo(null); // Centering the game window to the computer screen
         
+        //
         for (GameStage.Difficulty difficulty : GameStage.Difficulty.values()) {
             scores.put(difficulty, new HashMap<>());
         }
@@ -74,7 +78,6 @@ public class GameWindow extends JFrame {
         cardPanel.add(homePanel(), "Home Screen");
         cardPanel.add(newStagePanel(), "New Stage");
         cardPanel.add(stageSelectionPanel(), "Stage Selection");
-        cardPanel.add(leaderboardPanel(), "Leaderboard");
         cardPanel.add(easyStage(), "Easy");
         cardPanel.add(mediumStage(), "Medium");
         cardPanel.add(hardStage(), "Hard");
@@ -145,7 +148,7 @@ public class GameWindow extends JFrame {
         playerLeaderboard.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                card.show(cardPanel, "Leaderboard");
+                showLeaderboard();
             }
         });
         // Listener for the 'Quit Game' button.
@@ -211,10 +214,11 @@ public class GameWindow extends JFrame {
         newStagePanel.add(backToHome);
         newStagePanel.add(Box.createHorizontalGlue());
 
-        // Checks the following cases:
-        // - Name input can't be empty.
-        // - Name length can't exceed 20 characters (including spaces).
-        // - Name input must be of String type (uses regex to check this).
+        /* Checks the following cases:
+        * - Name input can't be empty.
+        * - Name length can't exceed 20 characters (including spaces).
+        * - Name input must be of String type (uses regex to check this).
+        */
         submitNameInput.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -225,7 +229,7 @@ public class GameWindow extends JFrame {
                         GameWindow.this,
                         "Player name can't exceed 20 characters.");
                 } else if (!nameInput.matches("[a-zA-z\\s]+")) {
-                    // Using a regex to check if player name is of String input and if string empty.
+                    // Using a regex to check if player name is of String input and not empty.
                     JOptionPane.showMessageDialog(
                         GameWindow.this,
                         "Player name must be of String type and can't be empty.");
@@ -286,7 +290,7 @@ public class GameWindow extends JFrame {
             "Obstacles: They kill you and are immobile."
         );
         JLabel monsterExplanation = stageExplanation(
-            "Monsters: They kill you and are mobile."
+            "Monsters: They kill you and are mobile. They can also eat walls."
         );
         JLabel easyStageDesc = stageExplanation(
             "'Easy': There are walls and obstacles and no monsters. Map is of size 20px x 20px."
@@ -308,9 +312,9 @@ public class GameWindow extends JFrame {
         buttonPanel.setLayout(buttonLayout);
         buttonPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
         buttonPanel.setAlignmentY(Component.CENTER_ALIGNMENT);
-        JButton buttonEasyStage = new JButton("Easy"); // Stage 1
-        JButton buttonMediumStage = new JButton("Medium"); // Stage 2
-        JButton buttonHardStage = new JButton("Hard"); // Stage 3
+        JButton buttonEasyStage = new JButton("Easy"); // 'Easy' stage
+        JButton buttonMediumStage = new JButton("Medium"); // 'Medium' stage
+        JButton buttonHardStage = new JButton("Hard"); // 'Hard' stage
 
         buttonPanel.add(Box.createHorizontalGlue());
         buttonPanel.add(buttonEasyStage);
@@ -389,7 +393,7 @@ public class GameWindow extends JFrame {
         buttonPanel.add(quitGameSession);
         buttonPanel.add(quitGame);
 
-        // Listener for the 'Quit Stage' button
+        // Listener for the 'Quit Stage' button.
         quitStage.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -397,7 +401,7 @@ public class GameWindow extends JFrame {
                 card.show(cardPanel, "Stage Selection");
             }
         });
-        // Listener for the 'Quit Game Session' button
+        // Listener for the 'Quit Game Session' button.
         quitGameSession.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -405,7 +409,7 @@ public class GameWindow extends JFrame {
                 card.show(cardPanel, "Home Screen");
             }
         });
-        // Listener for the 'Quit Game' button
+        // Listener for the 'Quit Game' button.
         quitGame.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -451,7 +455,7 @@ public class GameWindow extends JFrame {
         return timeLabel;
     }
 
-    // Method to get the elapsed time
+    // Method to get the elapsed time.
     public int getElapsedTime() {
         return elapsedTime;
     }
@@ -468,7 +472,7 @@ public class GameWindow extends JFrame {
 
         // Set the 'Easy' stage description.
         JLabel easyStageDesc = inStageText(
-            " You are playing the 'Easy' stage, where the player is denoted by a blue square."
+            " You are playing the 'Easy' stage, where the player is denoted by a blue square. The spawn point is denoted by a black square."
         );
 
         // Set the descriptions for the game elements.
@@ -484,7 +488,7 @@ public class GameWindow extends JFrame {
 
         // Set a good luck message.
         JLabel goodLuckMessage = inStageText(
-            " Good luck!"
+            " If the stage results in a dead end, please restart the stage. Good luck!"
         );
         goodLuckMessage.setFont(new Font("Dialog", Font.PLAIN, 18));
         
@@ -495,6 +499,7 @@ public class GameWindow extends JFrame {
         GameStage easyStageMap = new GameStage(this, GameStage.Difficulty.EASY);
         easyStageMap.setAlignmentX(Component.CENTER_ALIGNMENT);
         easyStageMap.setAlignmentY(Component.CENTER_ALIGNMENT);
+        easyStageMap.setPlayerName(playerName);
 
         // Adding a default button panel
         JPanel easyStageButtonPanel = stageButtonPanel();
@@ -535,7 +540,7 @@ public class GameWindow extends JFrame {
 
         // Set the 'Medium' stage description.
         JLabel mediumStageDesc = inStageText(
-            " You are playing the 'Medium' stage, where the player is denoted by a blue square."
+            " You are playing the 'Medium' stage, where the player is denoted by a blue square. The spawn point is denoted by a black square."
         );
 
         // Set the descriptions for the game elements.
@@ -554,7 +559,7 @@ public class GameWindow extends JFrame {
 
         // Set a good luck message.
         JLabel goodLuckMessage = inStageText(
-            " Good luck!"
+            " If the stage results in a dead end, please restart the stage. Good luck!"
         );
         goodLuckMessage.setFont(new Font("Dialog", Font.PLAIN, 18));
 
@@ -565,6 +570,7 @@ public class GameWindow extends JFrame {
         GameStage mediumStageMap = new GameStage(this, GameStage.Difficulty.MEDIUM);
         mediumStageMap.setAlignmentX(Component.CENTER_ALIGNMENT);
         mediumStageMap.setAlignmentY(Component.CENTER_ALIGNMENT);
+        mediumStageMap.setPlayerName(playerName);
 
         // Adding a default button panel
         JPanel mediumStageButtonPanel = stageButtonPanel();
@@ -589,10 +595,9 @@ public class GameWindow extends JFrame {
         // Adding all the implemented components to the 'Medium' stage screen.
         mediumStagePanel.add(labelPanel1);
         mediumStagePanel.add(mediumStageMap);
-        // gameFrame.add(mediumStageMap); // this is needed for KeyListener to work
         mediumStagePanel.add(labelPanel2);
         
-        SwingUtilities.invokeLater(() -> mediumStageMap.requestFocusInWindow());
+        // SwingUtilities.invokeLater(() -> mediumStageMap.requestFocusInWindow());
 
         return mediumStagePanel;
     }
@@ -609,7 +614,7 @@ public class GameWindow extends JFrame {
 
         // Set the 'Hard' stage description.
         JLabel hardStageDesc = inStageText(
-            " You are playing the 'Hard' stage, where the player is denoted by a blue square."
+            " You are playing the 'Hard' stage, where the player is denoted by a blue square. The spawn point is denoted by a black square."
         );
 
         // Set the descriptions for the game elements.
@@ -628,7 +633,7 @@ public class GameWindow extends JFrame {
 
         // Set a good luck message.
         JLabel goodLuckMessage = inStageText(
-            " Good luck!"
+            " If the stage results in a dead end, please restart the stage. Good luck!"
         );
         goodLuckMessage.setFont(new Font("Dialog", Font.PLAIN, 18));        
 
@@ -639,6 +644,7 @@ public class GameWindow extends JFrame {
         GameStage hardStageMap = new GameStage(this, GameStage.Difficulty.HARD);
         hardStageMap.setAlignmentX(Component.CENTER_ALIGNMENT);
         hardStageMap.setAlignmentY(Component.CENTER_ALIGNMENT);
+        hardStageMap.setPlayerName(playerName);
 
         // Adding a default button panel
         JPanel hardStageButtonPanel = stageButtonPanel();
@@ -705,30 +711,23 @@ public class GameWindow extends JFrame {
         }
     }
 
-    /**
-     * 
-     */
-    public void showLeaderboard() {
-        card.show(cardPanel, "Leaderboard");
-    }
-
-    /**
-     * 
+    /** Creates a pair for comparison with player time to sort in the leaderboards.
      */
     private static class Pair<A, B> {
         public A a;
         public B b;
+
         public Pair(A a, B b) {
             this.a = a;
             this.b = b;
         }
     }
 
-    /**
+    /** Put the stage difficulty, inputted player name, and the finished stage time in a map.
      * 
-     * @param difficulty
-     * @param playerName
-     * @param score
+     * @param difficulty The stage with the corresponding difficulty.
+     * @param playerName The inputted player name.
+     * @param score The score (finished stage time).
      */
     public void registerScore(GameStage.Difficulty difficulty, String playerName, int score) {
         Map<String, List<Integer>> playerFinishTimes = scores.getOrDefault(difficulty, 
@@ -739,10 +738,15 @@ public class GameWindow extends JFrame {
         scores.put(difficulty, playerFinishTimes);
     }
 
-    /**
+    /** Flattens two maps into one, where the first map contains the stage difficulty,
+     *  and the second contains an inputted player name mapped with the corresponding finished
+     *  stage time.
+     *  After doing so, return a new pair with only the inputted player name and the corresponding
+     *  finished stage time, where we compare to see which one has the lower finished stage time. 
      * 
-     * @param difficulty
-     * @return
+     * @param difficulty The stage with the corresponding difficulty.
+     * @return An integer which indicates whether the player time with 
+     *      the corresponding player name is lower than the other or not.
      */
     public List<Pair<String, Integer>> getScores(GameStage.Difficulty difficulty) {
         return scores.get(difficulty).entrySet().stream().flatMap(entry -> {
@@ -760,29 +764,69 @@ public class GameWindow extends JFrame {
         }).toList();
     }
 
-    /** Shows 10 stage plays with the highest scores, including the player name, and stage.
+    /** Displays the leaderboard, where it shows 10 stage plays with: 
+     * - the lowest finished stage time,
+     * - the stage difficulty,
+     * - inputted player name.
      * 
      * @return leaderboardPanel, the leaderboard screen.
      */
     private JPanel leaderboardPanel() {
-
+        // Set the panel for the 'Leaderboard' window.
         JPanel leaderboardPanel = new JPanel();
         leaderboardPanel.setBackground(new Color(39, 92, 135));
         leaderboardPanel.setLayout(new BoxLayout(leaderboardPanel, BoxLayout.Y_AXIS));
 
-        JLabel leaderboardText = new JLabel(
-            "Welcome to the leaderboard! The highest 10 scores are shown here."
+        // Set the 'Leaderboard' description.
+        JLabel leaderboardText = inStageText(
+            "Welcome to the leaderboard! The lowest 10 finished stage times are shown here with the corresponding difficulty."
             );
-        leaderboardText.setForeground(Color.WHITE);
-        leaderboardText.setFont(new Font("Monospaced", Font.BOLD, 18));
         leaderboardText.setAlignmentX(CENTER_ALIGNMENT);
-        leaderboardText.setAlignmentY(TOP_ALIGNMENT);
+        leaderboardText.setFont(new Font("Monospaced", Font.BOLD, 16));
 
+        // Set a button which redirects the player to the home screen.
         JButton backToHome = new JButton("Home Screen");
         backToHome.setAlignmentX(Component.CENTER_ALIGNMENT);
         backToHome.setAlignmentY(Component.CENTER_ALIGNMENT);
 
+        // Add the text to the leaderboard panel.
         leaderboardPanel.add(leaderboardText);
+        leaderboardPanel.add(Box.createRigidArea(new Dimension(0, 40)));
+
+        /* Generate sections for stage difficulty, where the inputted player name
+         * and finished stage time is shown in order of the time.
+         */
+        for (GameStage.Difficulty difficulty : GameStage.Difficulty.values()) {
+            JLabel difficultyLabel = new JLabel("Stage Difficulty: " + difficulty);
+            difficultyLabel.setForeground(Color.WHITE);
+            difficultyLabel.setFont(new Font("Monospaced", Font.PLAIN, 16));
+            difficultyLabel.setAlignmentX(CENTER_ALIGNMENT);
+            leaderboardPanel.add(difficultyLabel);
+
+            List<Pair<String, Integer>> scores = getScores(difficulty);
+            int leaderboardDisplay = Math.min(10, scores.size());
+
+            /* Add the pair of the inputted player name and the finished stage time
+             * into the leaderboard panel.
+             */
+            for (int rank = 0; rank < leaderboardDisplay; rank++) {
+                Pair<String, Integer> scoreEntry = scores.get(rank);
+                String playerName = scoreEntry.a;
+                int finishTime = scoreEntry.b;
+
+                JLabel scoreLabel = new JLabel((rank + 1) + ". " + playerName 
+                    + " : " + finishTime + "s");
+                scoreLabel.setForeground(Color.WHITE);
+                scoreLabel.setFont(new Font("Monospaced", Font.PLAIN, 16));
+                leaderboardPanel.add(scoreLabel);
+
+                // New updates to the leaderboard panel whenever there is a new play.
+                leaderboardPanel.revalidate();
+            }
+        }
+
+        // Add home button
+        leaderboardPanel.add(Box.createRigidArea(new Dimension(0, 40)));
         leaderboardPanel.add(backToHome);
 
         // Adding listener to the button which redirects the player to the home screen.
@@ -792,7 +836,15 @@ public class GameWindow extends JFrame {
                 card.show(cardPanel, "Home Screen");
             }
         });
-        return leaderboardPanel;
+
+        return leaderboardPanel; // Return the leaderboard panel.
+    }
+
+    /** Redirects to the leaderboard.
+     */
+    public void showLeaderboard() {
+        cardPanel.add(leaderboardPanel(), "Leaderboard");
+        card.show(cardPanel, "Leaderboard");
     }
     
     /** Run the game window with according GUI components.
