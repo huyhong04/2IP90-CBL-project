@@ -13,8 +13,8 @@ while avoiding main game elements such as:
 - Monsters, to kill the player upon touch (these do move).
 
 There are 3 different stages ranging in difficulty, where the stage map differs by its size and the amount of game elements:
-- In the 'Easy' stage, there are no monsters and very few walls and obstacles. The corresppnding map is of dimension 15x15.
-- As for the 'Medium' stage, there are now monsters, but the amount of walls and obstacles are still relatively few. The corresponding map is of dimension 25x25.
+- In the 'Easy' stage, there are very few monsters and very few walls and obstacles. The corresppnding map is of dimension 15x15.
+- As for the 'Medium' stage, there are a bit more monsters, but the amount of walls and obstacles are still relatively few. The corresponding map is of dimension 25x25.
 - Lastly, for the 'Hard' stage, there are much more walls, obstacles, and monsters. The corresponding map is of dimension 40x40.
 
 ### To Play the Game
@@ -43,7 +43,9 @@ Therefore, there will be a certain point where the monsters have destroyed enoug
 However, a consequence to this is the loss of time, resulting in a slower finish stage time, which can affect the chance of being on the leaderboards.
 
 In the stage map, no two game elements can occupy one cell, so in the case of a player colliding with an obstacle or monster, this would result in death. 
+
 4. There will be a popup message indicating this to inform the player what has happened, and thus the player is then redirected back to the stage selection screen. Vice versa, if the player has reached the goal, a popup message will appear which indicates that the player has passed the stage and hence will be directed to the leaderboard screen, where the player can see if the finish stage time is quick enough to be ranked on the leaderboard.
+
 Within the leaderboard, there is a 'Home Screen' button which allows the player to be redirected to the home screen. If the player chooses to play again, please follow Step 1.
 
 Note that once the player exits the game, the scores saved in the leaderboards will be gone. The scores are only saved in the time where the game is run.
