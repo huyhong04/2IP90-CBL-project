@@ -61,7 +61,7 @@ public class GameWindow extends JFrame {
         gameFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         gameFrame.setLocationRelativeTo(null); // Centering the game window to the computer screen
         
-        //
+        // Returns empty hashmap instead of null to avoid error of showing multiple scores at once.
         for (GameStage.Difficulty difficulty : GameStage.Difficulty.values()) {
             scores.put(difficulty, new HashMap<>());
         }
@@ -293,15 +293,15 @@ public class GameWindow extends JFrame {
             "Monsters: They kill you and are mobile. They can also eat walls."
         );
         JLabel easyStageDesc = stageExplanation(
-            "'Easy': There are walls and obstacles and no monsters. Map is of size 20px x 20px."
+            "'Easy': There are walls and obstacles and few monsters. Map is of size 15px x 15px."
         );
         easyStageDesc.setFont(new Font("Dialog", Font.PLAIN, 14));
         JLabel mediumStageDesc = stageExplanation(
-            "'Medium': There are walls, obstacles and few monsters. Map is of size 40px x 40px."
+            "'Medium': There are walls, obstacles and more monsters. Map is of size 25px x 25px."
         );
         mediumStageDesc.setFont(new Font("Dialog", Font.PLAIN, 14));
         JLabel hardStageDesc = stageExplanation(
-            "'Hard': There are walls, obstacles and many monsters. Map is of size 60px x 60px."
+            "'Hard': There are walls, obstacles and many monsters. Map is of size 40px x 40px."
         );
         hardStageDesc.setFont(new Font("Dialog", Font.PLAIN, 14));
 
@@ -485,6 +485,10 @@ public class GameWindow extends JFrame {
         JLabel obstacleDesc = inStageText(
             " Obstacles are denoted by yellow squares."
         );
+        JLabel monsterDesc = inStageText(
+            " Monsters are denoted by red squares."
+        );
+
 
         // Set a good luck message.
         JLabel goodLuckMessage = inStageText(
@@ -517,6 +521,7 @@ public class GameWindow extends JFrame {
         labelPanel2.add(gameGoal);
         labelPanel2.add(wallDesc);
         labelPanel2.add(obstacleDesc);
+        labelPanel2.add(monsterDesc);
         labelPanel2.add(goodLuckMessage);
         labelPanel2.add(easyTimeLabel);
 
@@ -779,7 +784,7 @@ public class GameWindow extends JFrame {
 
         // Set the 'Leaderboard' description.
         JLabel leaderboardText = inStageText(
-            "Welcome to the leaderboard! The lowest 10 finished stage times are shown here with the corresponding difficulty."
+            "Welcome to the leaderboard! The lowest 5 finish times for each difficulty are shown."
             );
         leaderboardText.setAlignmentX(CENTER_ALIGNMENT);
         leaderboardText.setFont(new Font("Monospaced", Font.BOLD, 16));
@@ -804,7 +809,7 @@ public class GameWindow extends JFrame {
             leaderboardPanel.add(difficultyLabel);
 
             List<Pair<String, Integer>> scores = getScores(difficulty);
-            int leaderboardDisplay = Math.min(10, scores.size());
+            int leaderboardDisplay = Math.min(5, scores.size());
 
             /* Add the pair of the inputted player name and the finished stage time
              * into the leaderboard panel.
@@ -818,6 +823,7 @@ public class GameWindow extends JFrame {
                     + " : " + finishTime + "s");
                 scoreLabel.setForeground(Color.WHITE);
                 scoreLabel.setFont(new Font("Monospaced", Font.PLAIN, 16));
+                scoreLabel.setAlignmentX(CENTER_ALIGNMENT);
                 leaderboardPanel.add(scoreLabel);
 
                 // New updates to the leaderboard panel whenever there is a new play.
