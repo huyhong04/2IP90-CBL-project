@@ -52,7 +52,14 @@ Note that once the player exits the game, the scores saved in the leaderboards w
 
 ### Learning Goals
 Our two learning goals are version control and test-driven development. 
-Regarding version control, the commit history and branch structure of the Git repository can be seen in the assignment submission. As for test-driven development, there is an attached document named "tdd-process" regarding our implementation of test-driven development with corresponding references in this Git repository.
+Regarding version control, the commit history and branch structure of the Git repository can be seen in the assignment submission. 
+As for test-driven development, there is an attached document named "CBL_Project_Group_176_Learning_Goals" regarding our implementation of test-driven development with corresponding references in this Git repository.
+
+We would also like to highlight some new programming concepts that we learned during the creation process of this game:
+- CardLayouts to manage switching between panels within the game.
+- Use of treemaps and hashmaps for generating the stage maps and creating the leaderboards.
+- Keybinds for the player movement
+- Randomized movement for the monsters depending on the player's position and direction of movement.
 
 ### Inspiration and References
 This game was inspired by the platformers "Pacman" and "Tomb of the Mask".
