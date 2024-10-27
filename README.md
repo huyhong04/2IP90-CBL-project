@@ -45,7 +45,8 @@ Within the leaderboard, there is a 'Home Screen' button which allows the player 
 
 ### Learning Goals
 Our two learning goals are version control and test-driven development. 
-Regarding version control, the commit history and branch structure of the Git repository can be seen. As for test-driven development, there is an attached document regarding our implementation of test-driven development with corresponding references in this Git repository.
+Regarding version control, the commit history and branch structure of the Git repository can be seen. As for test-driven development, there is an attached document 
+"tdd-process" regarding our implementation of test-driven development with corresponding references in this Git repository.
 
 ### Inspiration and References
-This game was inspired by the platformers "Pacman" (particularly the code structure by https://github.com/Gaspared/Pacman)and "Tomb of the Mask".
+This game was inspired by the platformers "Pacman" and "Tomb of the Mask". We used the code structure for "Pacman" from Gaspar as inspiration (https://github.com/Gaspared/Pacman).
