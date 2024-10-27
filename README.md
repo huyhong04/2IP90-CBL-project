@@ -43,7 +43,9 @@ Therefore, there will be a certain point where the monsters have destroyed enoug
 However, a consequence to this is the loss of time, resulting in a slower finish stage time, which can affect the chance of being on the leaderboards.
 
 In the stage map, no two game elements can occupy one cell, so in the case of a player colliding with an obstacle or monster, this would result in death. 
+
 4. There will be a popup message indicating this to inform the player what has happened, and thus the player is then redirected back to the stage selection screen. Vice versa, if the player has reached the goal, a popup message will appear which indicates that the player has passed the stage and hence will be directed to the leaderboard screen, where the player can see if the finish stage time is quick enough to be ranked on the leaderboard.
+
 Within the leaderboard, there is a 'Home Screen' button which allows the player to be redirected to the home screen. If the player chooses to play again, please follow Step 1.
 
 Note that once the player exits the game, the scores saved in the leaderboards will be gone. The scores are only saved in the time where the game is run.
