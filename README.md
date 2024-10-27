@@ -13,8 +13,8 @@ while avoiding main game elements such as:
 - Monsters, to kill the player upon touch (these do move).
 
 There are 3 different stages ranging in difficulty, where the stage map differs by its size and the amount of game elements:
-- In the 'Easy' stage, there are no monsters and very few walls and obstacles. The corresppnding map is of dimension 15x15.
-- As for the 'Medium' stage, there are now monsters, but the amount of walls and obstacles are still relatively few. The corresponding map is of dimension 25x25.
+- In the 'Easy' stage, there are very few monsters and very few walls and obstacles. The corresppnding map is of dimension 15x15.
+- As for the 'Medium' stage, there are a bit more monsters, but the amount of walls and obstacles are still relatively few. The corresponding map is of dimension 25x25.
 - Lastly, for the 'Hard' stage, there are much more walls, obstacles, and monsters. The corresponding map is of dimension 40x40.
 
 ### To Play the Game
